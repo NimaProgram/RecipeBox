@@ -207,19 +207,58 @@ function onRecipeSelected() {
 function buildAndShowRecipeTree(recipeName) {
     const container = document.getElementById('recipeTreeContainer');
     const treeDiv = document.getElementById('recipeTree');
+    const listContainer = document.getElementById('recipeListContainer');
+    const listDiv = document.getElementById('recipeList');
     
-    if (!container || !treeDiv) {
-        console.warn('Recipe tree DOM elements not found');
+    if (!container || !treeDiv || !listContainer || !listDiv) {
+        console.warn('Recipe tree/list DOM elements not found');
         return;
     }
     
     try {
-        // ツリーHTMLを構築
-        const treeHTML = buildRecipeTreeHTML(recipeName, 0, new Set());
-        treeDiv.innerHTML = treeHTML;
+        // 画面幅チェック
+        const screenWidth = window.innerWidth;
+        const isMobile = screenWidth <= 768;
+        const isVerySmall = screenWidth <= 480;
         
-        // コンテナを表示
-        container.style.display = 'block';
+        if (isVerySmall) {
+            // 480px以下では独立したリストコンテナを使用
+            const listHTML = buildRecipeListHTML(recipeName);
+            listDiv.innerHTML = `
+                <div class="recipe-list-header">
+                    <h4><i class="fas fa-list"></i> 必要材料リスト</h4>
+                </div>
+                <div class="recipe-list-content">
+                    ${listHTML}
+                </div>
+            `;
+            
+            // ツリーコンテナを非表示、リストコンテナを表示
+            container.style.display = 'none';
+            listContainer.style.display = 'block';
+        } else {
+            // 481px以上では従来のツリー形式
+            const treeHTML = buildRecipeTreeHTML(recipeName, 0, new Set(), null, isMobile);
+            
+            // モバイル用のヘッダーとトグルボタンを追加
+            if (isMobile) {
+                const headerHTML = `
+                    <div class="tree-mobile-header">
+                        <button class="tree-toggle-btn" onclick="toggleRecipeTreeDetails()">
+                            <i class="fas fa-eye" id="treeToggleIcon"></i>
+                            <span id="treeToggleText">詳細表示</span>
+                        </button>
+                    </div>
+                `;
+                treeDiv.innerHTML = headerHTML + `<div id="recipeTreeContent" class="tree-collapsed">${treeHTML}</div>`;
+            } else {
+                treeDiv.innerHTML = treeHTML;
+            }
+            
+            // リストコンテナを非表示、ツリーコンテナを表示
+            listContainer.style.display = 'none';
+            container.style.display = 'block';
+        }
         
         // DOM更新後に折りたたみイベントを設定
         setTimeout(() => {
@@ -232,14 +271,69 @@ function buildAndShowRecipeTree(recipeName) {
 }
 
 /**
+ * レシピのシンプルなリスト形式HTMLを構築（小画面用）
+ * @param {string} recipeName - レシピ名
+ * @returns {string} リスト形式のHTML
+ */
+function buildRecipeListHTML(recipeName) {
+    const recipe = recipeDB.getRecipe(recipeName);
+    if (!recipe) {
+        return '<div class="list-error">レシピが見つかりません</div>';
+    }
+    
+    try {
+        // 材料を展開して必要量を取得
+        const expandedIngredients = recipeDB.expandIngredients(recipeName, 1);
+        
+        if (!expandedIngredients || Object.keys(expandedIngredients).length === 0) {
+            return '<div class="list-empty">必要な材料がありません</div>';
+        }
+        
+        // 材料をソートして表示
+        const sortedIngredients = Object.entries(expandedIngredients)
+            .sort(([a], [b]) => a.localeCompare(b, 'ja'));
+        
+        let listHTML = '<ul class="recipe-ingredient-list">';
+        
+        for (const [ingredientName, amount] of sortedIngredients) {
+            const ingredientRecipe = recipeDB.getRecipe(ingredientName);
+            const icon = ingredientRecipe ? ingredientRecipe.icon || 'fa-cube' : 'fa-cube';
+            const itemType = ingredientRecipe ? (ingredientRecipe.type === 'basic' ? '基本材料' : 'レシピ') : '不明';
+            const typeClass = ingredientRecipe ? (ingredientRecipe.type === 'basic' ? 'basic' : 'recipe') : 'unknown';
+            
+            listHTML += `
+                <li class="recipe-list-item ${typeClass}">
+                    <div class="item-info">
+                        <i class="fas ${icon} item-icon"></i>
+                        <span class="item-name">${ingredientName}</span>
+                        <span class="item-type">(${itemType})</span>
+                    </div>
+                    <div class="item-amount">
+                        <span class="amount-value">${amount}</span>
+                    </div>
+                </li>
+            `;
+        }
+        
+        listHTML += '</ul>';
+        return listHTML;
+        
+    } catch (error) {
+        console.error('Error building recipe list:', error);
+        return '<div class="list-error">材料リストの生成でエラーが発生しました</div>';
+    }
+}
+
+/**
  * レシピツリーのHTMLを再帰的に構築
  * @param {string} recipeName - レシピ名
  * @param {number} depth - ツリーの深度
  * @param {Set} visited - 循環参照チェック用のセット
  * @param {number|null} amount - 材料の必要量
+ * @param {boolean} isMobile - モバイル表示かどうか
  * @returns {string} ツリーノードのHTML
  */
-function buildRecipeTreeHTML(recipeName, depth = 0, visited = new Set(), amount = null) {
+function buildRecipeTreeHTML(recipeName, depth = 0, visited = new Set(), amount = null, isMobile = false) {
     // 循環参照チェック
     if (visited.has(recipeName)) {
         return createErrorTreeNode(recipeName, depth, amount, 'fa-exclamation-triangle', '循環参照');
@@ -294,7 +388,7 @@ function createErrorTreeNode(recipeName, depth, amount, iconClass, errorMessage)
     if (recipe.ingredients && Object.keys(recipe.ingredients).length > 0) {
         html += '<div class="node-children">';
         for (const [ingredient, amount] of Object.entries(recipe.ingredients)) {
-            html += buildRecipeTreeHTML(ingredient, depth + 1, new Set(visited), amount);
+            html += buildRecipeTreeHTML(ingredient, depth + 1, new Set(visited), amount, isMobile);
         }
         html += '</div>';
     }
@@ -388,8 +482,14 @@ function toggleNodeChildren(node) {
  */
 function hideRecipeTree() {
     const container = document.getElementById('recipeTreeContainer');
+    const listContainer = document.getElementById('recipeListContainer');
+    
     if (container) {
         container.style.display = 'none';
+    }
+    
+    if (listContainer) {
+        listContainer.style.display = 'none';
     }
 }
 
@@ -423,4 +523,80 @@ function updateRecipeStats() {
         console.error('Error in updateRecipeStats:', error);
     }
 }
+
+// ===========================================
+// モバイル用レシピツリー機能
+// ===========================================
+
+/**
+ * モバイル用レシピツリーの詳細表示を切り替え
+ */
+function toggleRecipeTreeDetails() {
+    const content = document.getElementById('recipeTreeContent');
+    const icon = document.getElementById('treeToggleIcon');
+    const text = document.getElementById('treeToggleText');
+    
+    if (!content || !icon || !text) return;
+    
+    const isCollapsed = content.classList.contains('tree-collapsed');
+    
+    if (isCollapsed) {
+        content.classList.remove('tree-collapsed');
+        content.classList.add('tree-expanded');
+        icon.className = 'fas fa-eye-slash';
+        text.textContent = '簡略表示';
+    } else {
+        content.classList.remove('tree-expanded');
+        content.classList.add('tree-collapsed');
+        icon.className = 'fas fa-eye';
+        text.textContent = '詳細表示';
+    }
+}
+
+// グローバル関数として登録
+window.toggleRecipeTreeDetails = toggleRecipeTreeDetails;
+
+// ===========================================
+// レスポンシブ表示切り替え機能
+// ===========================================
+
+/**
+ * 画面サイズに応じてレシピ表示を更新
+ */
+function handleRecipeDisplayResize() {
+    const treeContainer = document.getElementById('recipeTreeContainer');
+    const listContainer = document.getElementById('recipeListContainer');
+    
+    if ((!treeContainer || treeContainer.style.display === 'none') && 
+        (!listContainer || listContainer.style.display === 'none')) {
+        return; // 両方とも表示されていない場合は何もしない
+    }
+    
+    // 現在表示中のレシピ名を取得
+    const selectedRecipe = getSelectValue('selectedRecipe');
+    if (!selectedRecipe || selectedRecipe === '') {
+        return;
+    }
+    
+    // 表示を再構築
+    buildAndShowRecipeTree(selectedRecipe);
+}
+
+/**
+ * ウィンドウリサイズイベントの設定
+ */
+function initializeResponsiveRecipeDisplay() {
+    let resizeTimeout;
+    
+    window.addEventListener('resize', function() {
+        // デバウンス処理（リサイズ完了後に実行）
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(handleRecipeDisplayResize, 250);
+    });
+}
+
+// ページ読み込み時にリサイズ対応を初期化
+document.addEventListener('DOMContentLoaded', function() {
+    initializeResponsiveRecipeDisplay();
+});
 

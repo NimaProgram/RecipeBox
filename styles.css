@@ -1,11 +1,31 @@
-/* Reset and Base Styles */
+/**
+ * RecipeBox - レシピ管理システム CSS
+ * モバイルファーストデザイン & アクセシビリティ対応
+ * 
+ * セクション構成:
+ * 1. Reset & Variables (リセット・CSS変数)
+ * 2. Base Styles (基本スタイル)  
+ * 3. Layout Components (レイアウト)
+ * 4. UI Components (UIコンポーネント)
+ * 5. Modal & Dialog (モーダル・ダイアログ)
+ * 6. Responsive Design (レスポンシブ)
+ * 7. Accessibility (アクセシビリティ)
+ */
+
+/* ===========================
+   1. RESET & VARIABLES 
+   =========================== */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/* ライトテーマ（デフォルト） */
+/* ===========================
+   2. BASE STYLES
+   =========================== */
+
+/* CSS Custom Properties - Light Theme */
 :root {
     --primary-color: #1e40af;        /* 濃い青 */
     --primary-hover: #1d4ed8;        /* ホバー時の青 */
@@ -58,7 +78,7 @@
     --scrollbar-thumb-hover: linear-gradient(135deg, #1d4ed8, #b91c1c);
 }
 
-/* ===== ダークテーマ設定 ===== */
+/* CSS Custom Properties - Dark Theme */
 [data-theme="dark"] {
     --primary-color: #3b82f6;        /* 明るい青 */
     --primary-hover: #2563eb;        /* ホバー時の青 */
@@ -121,8 +141,11 @@ body {
     transition: background 0.3s ease, color 0.3s ease;
 }
 
-/* ===== 統一スクロールバーデザイン ===== */
-/* 全体のスクロールバー */
+/* ===========================
+   3. LAYOUT COMPONENTS
+   =========================== */
+
+/* Unified Scrollbar Design */
 ::-webkit-scrollbar {
     width: 12px;
     height: 12px;
@@ -239,6 +262,12 @@ body {
     align-items: center;
     gap: 8px;
     margin: 0;
+}
+
+.logo span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .logo i {
@@ -994,18 +1023,140 @@ body {
     }
 }
 
-@media (max-width: 480px) {
-    .ingredients-grid {
-        grid-template-columns: 1fr;
+/* MFI: iPhone SE専用最適化（375px） */
+@media (max-width: 375px) and (min-width: 321px) {
+    .recipe-tree-container {
+        padding: 10px;
+        margin-top: 12px;
+        border-radius: 6px;
     }
     
-    .sub-recipes-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
+    .recipe-tree-container h3 {
+        font-size: 1.05em;
+        margin-bottom: 10px;
     }
     
-    .inventory-grid {
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    .recipe-tree {
+        font-size: 13px;
+    }
+    
+    .node-content {
+        padding: 10px 12px; /* 9px 11px → 10px 12px に調整 */
+        min-height: 46px; /* 42px → 46px に統一 */
+        min-width: 320px; /* iPhone SE幅に最適化 */
+    }
+    
+    .node-icon {
+        width: 17px;
+        font-size: 0.95em;
+    }
+    
+    .node-name {
+        font-size: 0.88em;
+        max-width: 200px; /* iPhone SE用調整 */
+    }
+    
+    .node-type {
+        font-size: 0.72em;
+    }
+    
+    .ingredient-amount {
+        font-size: 0.78em;
+    }
+    
+    .amount-badge {
+        padding: 2px 5px;
+        font-size: 0.72em;
+        min-width: 19px;
+    }
+    
+    .tree-toggle-btn {
+        padding: 10px 16px; /* 8px 14px → 10px 16px に統一 */
+        font-size: 0.9em; /* 0.85em → 0.9em に統一 */
+        margin-bottom: 12px; /* 10px → 12px に統一 */
+        min-height: 44px; /* タッチターゲット確保 */
+    }
+}
+
+/* MFI: 超小画面対応（320px以下） */
+@media (max-width: 320px) {
+    .recipe-tree-container {
+        padding: 8px;
+        margin-top: 12px;
+    }
+    
+    .recipe-tree-container h3 {
+        font-size: 1em;
+        margin-bottom: 10px;
+    }
+    
+    .recipe-tree {
+        font-size: 13px;
+    }
+    
+    .node-content {
+        padding: 8px 10px;
+        min-height: 40px;
+        min-width: 260px;
+    }
+    
+    .node-icon {
+        width: 16px;
+        font-size: 0.9em;
+    }
+    
+    .node-name {
+        font-size: 0.85em;
+    }
+    
+    .node-type {
+        font-size: 0.7em;
+    }
+    
+    .ingredient-amount {
+        font-size: 0.75em;
+    }
+    
+    .amount-badge {
+        padding: 1px 4px;
+        font-size: 0.7em;
+        min-width: 18px;
+    }
+}
+
+/* MFI: レシピツリーのタブレット・小画面対応 */
+@media (max-width: 768px) and (min-width: 481px) {
+    .recipe-tree-container {
+        padding: 16px;
+        margin-top: 18px;
+    }
+    
+    .recipe-tree {
+        font-size: 15px;
+    }
+    
+    .node-content {
+        padding: 11px 14px;
+        gap: 10px;
+        min-height: 44px;
+    }
+    
+    .node-name {
+        font-size: 0.95em;
+        max-width: calc(100vw - 140px);
+    }
+    
+    .node-type {
+        font-size: 0.8em;
+    }
+    
+    .ingredient-amount {
+        font-size: 0.85em;
+    }
+    
+    .amount-badge {
+        font-size: 0.8em;
+        padding: 3px 7px;
     }
 }
 
@@ -1680,9 +1831,12 @@ body {
 
 .recipe-stats {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr; /* 大画面でも2列で統一 */
     gap: 20px;
     margin-top: 10px;
+    max-width: 400px; /* 最大幅を制限してバランス良く */
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .stat-item {
@@ -1722,7 +1876,7 @@ body {
     display: block;
     font-size: 0.9rem;
     color: var(--text-secondary);
-    margin-bottom: 5px;
+    margin-bottom: 8px; /* 5px → 8px に拡大 */
     font-weight: 500;
 }
 
@@ -2252,6 +2406,14 @@ select option:checked {
     margin-bottom: 5px;
     font-weight: 500;
     color: var(--text-primary);
+}
+
+.form-help {
+    display: block;
+    margin-top: 4px;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    line-height: 1.4;
 }
 
 .form-group input,
@@ -3267,4 +3429,676 @@ select option:checked {
     background: linear-gradient(135deg, var(--primary-hover), var(--primary-color));
     transform: scale(1.05);
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* ==============================================
+   MFI (Mobile First Index) 対応
+   ============================================== */
+
+/* モバイルファーストのベーススタイル（既存をオーバーライド） */
+@media (max-width: 375px) {
+    /* 小型スマートフォン対応 */
+    .container {
+        padding: 10px;
+        margin: 0;
+    }
+    
+    .header {
+        height: 50px;
+        padding: 0 10px;
+    }
+    
+    .header-content {
+        gap: 10px;
+    }
+    
+    .logo {
+        font-size: 1.4rem;
+    }
+    
+    .logo span {
+        font-size: 1.2rem;
+    }
+    
+    /* 極小画面では短いテキストのみ表示 */
+    .logo span::before {
+        content: "RecipeBox";
+    }
+    
+    .logo span {
+        font-size: 0; /* 元のテキストを非表示 */
+    }
+    
+    .theme-toggle {
+        width: 35px;
+        height: 35px;
+        font-size: 1rem;
+    }
+    
+    /* ウェルカムカード */
+    .welcome-card {
+        padding: 20px;
+        margin: 10px 0;
+        min-height: auto;
+    }
+    
+    .welcome-icon {
+        font-size: 2.5em;
+        margin-bottom: 15px;
+    }
+    
+    .welcome-card h2 {
+        font-size: 1.4rem;
+        margin-bottom: 15px;
+    }
+    
+    .welcome-description {
+        font-size: 0.9rem;
+        line-height: 1.4;
+    }
+    
+    /* 機能リスト */
+    .feature-list li {
+        font-size: 0.85rem;
+        padding: 6px 0;
+    }
+    
+    .feature-list li i {
+        font-size: 1rem;
+        width: 18px;
+    }
+    
+    /* ボタン */
+    .welcome-btn {
+        padding: 10px 16px;
+        font-size: 0.9rem;
+        min-width: 180px;
+        gap: 8px;
+    }
+    
+    /* レシピカード */
+    .recipe-card, .inventory-card, .calculator-card {
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .recipe-card h2 {
+        font-size: 1.2rem;
+    }
+    
+    /* MFI: 統計表示最適化 */
+    .recipe-stats {
+        display: grid;
+        grid-template-columns: 1fr 1fr; /* 2列で横並び */
+        gap: 8px; /* 10px → 8px に縮小 */
+        margin-top: 8px; /* 10px → 8px に縮小 */
+    }
+    
+    .stat-item {
+        padding: 12px; /* 15px → 12px に縮小 */
+        border-radius: 8px; /* より小さく */
+        font-size: 13px; /* フォントサイズ縮小 */
+    }
+    
+    .stat-label {
+        font-size: 11px; /* さらに小さく */
+        opacity: 0.8;
+        display: block;
+        margin-bottom: 4px;
+    }
+    
+    .stat-value {
+        font-size: 18px; /* 値は少し大きく、読みやすく */
+        font-weight: 700;
+        color: var(--accent-color);
+    }
+    
+    .stat-number {
+        font-size: 1.8rem;
+    }
+    
+    .stat-label {
+        font-size: 0.8rem;
+    }
+}
+
+/* タッチターゲットサイズの最適化 */
+@media (pointer: coarse) {
+    /* タッチデバイス用のタッチターゲット */
+    button, .btn, .welcome-btn, .toggle-button {
+        min-height: 44px;
+        min-width: 44px;
+        padding: 12px 20px;
+    }
+    
+    .custom-dropdown-button {
+        min-height: 44px;
+        padding: 12px 16px;
+    }
+    
+    .custom-dropdown-item {
+        min-height: 44px;
+        padding: 12px 16px;
+    }
+    
+    /* アイコンボタン */
+    .theme-toggle, .close {
+        min-width: 44px;
+        min-height: 44px;
+    }
+    
+    /* フォーム要素 */
+    input, select, textarea {
+        min-height: 44px;
+        font-size: 16px; /* iOS zoom防止 */
+    }
+}
+
+/* モバイル横向き対応 */
+@media (max-width: 768px) and (orientation: landscape) {
+    .header {
+        height: 45px;
+    }
+    
+    .main-content {
+        padding-top: 55px;
+    }
+    
+    .welcome-card {
+        padding: 20px 30px;
+        min-height: auto;
+    }
+    
+    .welcome-icon {
+        font-size: 2em;
+        margin-bottom: 10px;
+    }
+    
+    .feature-highlights {
+        margin: 15px 0;
+        padding: 15px;
+    }
+    
+    .welcome-actions {
+        gap: 10px;
+        margin-top: 15px;
+    }
+}
+
+/* 高解像度ディスプレイ対応 */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    /* Retina ディスプレイ用の最適化 */
+    .logo {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+    
+    .welcome-icon, .stat-item i {
+        -webkit-font-smoothing: antialiased;
+    }
+}
+
+/* プリファー設定対応 */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+@media (prefers-contrast: high) {
+    :root {
+        --border-color: #000000;
+        --text-color: #000000;
+        --bg-primary: #ffffff;
+    }
+    
+    [data-theme="dark"] {
+        --border-color: #ffffff;
+        --text-color: #ffffff;
+        --bg-primary: #000000;
+    }
+}
+
+/* ======================================
+   MFI: アクセシビリティ強化
+   ====================================== */
+
+/* MFI: スキップリンク（スクリーンリーダー対応） */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 6px;
+    background: var(--primary-color);
+    color: var(--text-inverse);
+    padding: 8px;
+    text-decoration: none;
+    z-index: 10000;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+.skip-link:focus {
+    top: 6px;
+}
+
+/* MFI: レスポンシブ画像とアイコン */
+img, svg {
+    max-width: 100%;
+    height: auto;
+}
+
+.responsive-image {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* MFI: 高解像度画面対応 */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .icon, .logo {
+        image-rendering: -webkit-optimize-contrast;
+        image-rendering: crisp-edges;
+    }
+}
+
+/* MFI: タブレット向け最適化（768px-1024px） */
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+    .container {
+        max-width: 90%;
+        padding: 0 20px;
+    }
+    
+    .recipe-grid {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+    }
+    
+    .modal-content {
+        width: 80%;
+        max-width: 600px;
+    }
+    
+    /* タブレット用フォントサイズ調整 */
+    h1 { font-size: 2.2rem; }
+    h2 { font-size: 1.8rem; }
+    h3 { font-size: 1.4rem; }
+}
+
+/* MFI: プリント対応 */
+@media print {
+    .no-print {
+        display: none !important;
+    }
+    
+    .recipe-card {
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
+    
+    body {
+        background: white !important;
+        color: black !important;
+    }
+}
+
+/* MFI: 入力フィールドのタッチ対応強化 */
+input[type="text"],
+input[type="number"],
+input[type="search"],
+select,
+textarea {
+    min-height: 36px; /* 480px以下では36px、大画面では44px */
+    font-size: 14px; /* iOS自動ズーム防止 + コンパクト化 */
+    padding: 8px 12px; /* 480px以下では小さく */
+    border-radius: 6px; /* 480px以下では小さく */
+    border: 2px solid var(--border-color);
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    transition: all 0.2s ease;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+/* 大画面用の設定を追加 */
+@media (min-width: 481px) {
+    input[type="text"],
+    input[type="number"],
+    input[type="search"],
+    select,
+    textarea {
+        min-height: 44px; /* 大画面では44px */
+        font-size: 16px; /* 大画面では16px */
+        padding: 12px 16px; /* 大画面では大きく */
+        border-radius: 8px; /* 大画面では大きく */
+    }
+}
+
+/* MFI: フォーカス状態の強化 */
+input:focus,
+select:focus,
+textarea:focus {
+    outline: 3px solid var(--primary-color);
+    outline-offset: 2px;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.2);
+}
+
+/* MFI: ボタンのタッチ対応 */
+button,
+.btn,
+.button {
+    min-height: 36px; /* 480px以下では36px、大画面では44px */
+    min-width: 36px; /* 480px以下では36px、大画面では44px */
+    padding: 8px 14px; /* 480px以下では小さく */
+    font-size: 13px; /* 480px以下では小さく */
+    touch-action: manipulation; /* タッチ遅延除去 */
+    cursor: pointer;
+    border-radius: 6px; /* 480px以下では小さく */
+    font-weight: 500;
+    border: none;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+/* 大画面用のボタン設定 */
+@media (min-width: 481px) {
+    button,
+    .btn,
+    .button {
+        min-height: 44px; /* 大画面では44px */
+        min-width: 44px; /* 大画面では44px */
+        padding: 12px 20px; /* 大画面では大きく */
+        font-size: 16px; /* 大画面では16px */
+        border-radius: 8px; /* 大画面では大きく */
+    }
+}
+
+/* MFI: タッチフィードバック */
+button:active,
+.btn:active {
+    transform: scale(0.98);
+}
+
+/* MFI: 大画面対応（1440px以上） */
+@media screen and (min-width: 1440px) {
+    .container {
+        max-width: 1400px;
+    }
+    
+    .recipe-grid {
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 30px;
+    }
+}
+
+/* MFI: 子ノードの階層視覚化 */
+.node-children .node-content {
+    background: rgba(249, 250, 251, 0.8) !important;
+    border: 1px solid var(--border-color) !important;
+    opacity: 0.95;
+    border-left: 3px solid var(--secondary-color) !important; /* 左端に緑色線 */
+    margin-left: 4px; /* 親ノードとの区別 */
+}
+
+/* ダークテーマ用の子ノード背景 */
+[data-theme="dark"] .node-children .node-content {
+    background: rgba(55, 65, 81, 0.6) !important;
+}
+
+/* 子ノードのアイコンとフォント調整 */
+.node-children .node-icon {
+    width: 16px !important;
+    font-size: 0.9em !important;
+    opacity: 0.8;
+}
+
+.node-children .node-name {
+    font-size: 0.85em !important;
+}
+
+/* 子ノードの数量バッジを小さく */
+.node-children .amount-badge {
+    font-size: 0.7em !important;
+    padding: 1px 5px !important;
+}
+
+/* ======================================
+   レシピリスト形式（小画面用）
+   ====================================== */
+
+.recipe-list-container {
+    margin-top: 8px;
+    padding: 0;
+}
+
+.recipe-list-header {
+    background: var(--primary-color);
+    color: var(--text-inverse);
+    padding: 12px 16px;
+    border-radius: 8px 8px 0 0;
+    margin-bottom: 0;
+}
+
+.recipe-list-header h4 {
+    margin: 0;
+    font-size: 1em;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.recipe-list-content {
+    background: var(--bg-primary);
+    border: 2px solid var(--primary-color);
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    padding: 8px;
+}
+
+.recipe-ingredient-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.recipe-list-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    margin-bottom: 6px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    min-height: 44px; /* タッチターゲット確保 */
+    transition: all 0.2s ease;
+}
+
+.recipe-list-item:last-child {
+    margin-bottom: 0;
+}
+
+.recipe-list-item.basic {
+    background: #dcfce7;
+    border-color: #16a34a;
+    border-left: 4px solid #16a34a;
+}
+
+.recipe-list-item.recipe {
+    background: rgba(59, 130, 246, 0.1);
+    border-color: #3b82f6;
+    border-left: 4px solid #3b82f6;
+}
+
+/* ダークテーマ対応 */
+[data-theme="dark"] .recipe-list-item.basic {
+    background: rgba(34, 197, 94, 0.2);
+    color: #bbf7d0;
+}
+
+[data-theme="dark"] .recipe-list-item.recipe {
+    background: rgba(59, 130, 246, 0.2);
+    color: #dbeafe;
+}
+
+.item-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    min-width: 0;
+}
+
+.item-icon {
+    width: 20px;
+    text-align: center;
+    font-size: 1.1em;
+    flex-shrink: 0;
+}
+
+.recipe-list-item.basic .item-icon {
+    color: #16a34a;
+}
+
+.recipe-list-item.recipe .item-icon {
+    color: #3b82f6;
+}
+
+.item-name {
+    font-weight: 600;
+    color: var(--text-primary);
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.item-type {
+    font-size: 0.8em;
+    color: var(--text-muted);
+    white-space: nowrap;
+    margin-left: 8px;
+}
+
+.item-amount {
+    flex-shrink: 0;
+    margin-left: 12px;
+}
+
+.amount-value {
+    background: var(--primary-color);
+    color: var(--text-inverse);
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.9em;
+    font-weight: 700;
+    min-width: 24px;
+    text-align: center;
+    display: inline-block;
+}
+
+/* エラー・空状態表示 */
+.list-error,
+.list-empty {
+    text-align: center;
+    padding: 20px;
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+.list-error {
+    color: var(--error-color);
+}
+
+/* モバイル用調整 - 統合版 */
+@media (max-width: 480px) {
+    /* MFI: 全体的なコンパクト化 */
+    body {
+        font-size: 14px; /* 16px → 14px に縮小 */
+        line-height: 1.4; /* 1.6 → 1.4 に調整 */
+    }
+    
+    .container {
+        padding: 8px 12px; /* より小さなパディング */
+        max-width: 100%;
+    }
+    
+    /* MFI: 見出しサイズ縮小 */
+    h1 { 
+        font-size: 1.4rem; /* 1.8rem → 1.4rem */
+        margin-bottom: 12px; /* 20px → 12px */
+    }
+    h2 { 
+        font-size: 1.2rem; /* 1.5rem → 1.2rem */
+        margin-bottom: 10px; /* 16px → 10px */
+    }
+    h3 { 
+        font-size: 1.1rem; /* 1.3rem → 1.1rem */
+        margin-bottom: 8px; /* 12px → 8px */
+    }
+    h4 {
+        font-size: 1rem; /* 1.1rem → 1rem */
+        margin-bottom: 6px; /* 10px → 6px */
+    }
+    
+    /* MFI: ヘッダー最適化 */
+    .header {
+        padding: 12px 0; /* 20px → 12px */
+    }
+    
+    .logo {
+        font-size: 1.3rem; /* 1.6rem → 1.3rem */
+        gap: 8px; /* 12px → 8px */
+    }
+    
+    .logo i {
+        font-size: 1.1rem; /* 1.4rem → 1.1rem */
+    }
+    
+    /* MFI: レシピリスト表示最適化 */
+    .recipe-list-header {
+        padding: 8px 10px; /* 10px 12px → 8px 10px に縮小 */
+        border-radius: 6px 6px 0 0; /* 8px → 6px に縮小 */
+    }
+    
+    .recipe-list-header h4 {
+        font-size: 0.9em; /* 1em → 0.9em に縮小 */
+        gap: 6px; /* 8px → 6px に縮小 */
+    }
+    
+    .recipe-list-content {
+        padding: 4px; /* 6px → 4px に縮小 */
+        border-radius: 0 0 6px 6px; /* 8px → 6px に縮小 */
+    }
+    
+    .recipe-list-item {
+        padding: 8px 10px;
+        margin-bottom: 4px;
+    }
+    
+    .item-info {
+        gap: 8px;
+    }
+    
+    .item-icon {
+        width: 18px;
+        font-size: 1em;
+    }
+    
+    .item-name {
+        font-size: 0.9em;
+    }
+    
+    .item-type {
+        font-size: 0.75em;
+    }
+    
+    .amount-value {
+        padding: 3px 8px;
+        font-size: 0.8em;
+    }
 }

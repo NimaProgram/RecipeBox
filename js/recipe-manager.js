@@ -349,24 +349,6 @@ function closeRecipeManager() {
     });
 }
 
-// メインレシピ作成画面を表示
-function showCreateMainRecipe() {
-    showRecipeManager();
-    
-}
-
-// レシピフォームをクリア
-function clearRecipeForm() {
-    document.getElementById('recipeForm').reset();
-    document.getElementById('baseQuantity').value = 1;
-    document.getElementById('ingredientsList').innerHTML = '';
-    addIngredient(); // 最初の材料入力欄を追加
-}
-
-// 重複した関数を削除（最初の関数を使用）
-
-// 古いselect要素用のハンドラー（カスタムドロップダウンでは不要）
-
 // 材料入力欄を追加
 function addIngredient(selectedIngredient = '', amount = 1) {
     const ingredientsList = document.getElementById('ingredientsList');
@@ -583,29 +565,6 @@ function updateSelectOptions(select) {
     // 元の選択を復元
     select.value = currentValue;
 }
-
-// 重複した関数を削除
-
-// 利用可能な材料リストを更新
-function updateAvailableIngredients() {
-    // 材料選択欄を動的に更新
-    const selects = document.querySelectorAll('#ingredientsList select');
-    selects.forEach(select => {
-        const currentValue = select.value;
-        select.innerHTML = '<option value="">材料を選択...</option>';
-        
-        recipeDB.getAllRecipes().forEach(recipe => {
-            const option = document.createElement('option');
-            option.value = recipe.name;
-            option.textContent = `${recipe.name} (${recipe.type === 'basic' ? '基本材料' : 'レシピ'})`;
-            if (recipe.name === currentValue) {
-                option.selected = true;
-            }
-            select.appendChild(option);
-        });
-    });
-}
-
 // レシピを保存
 function saveRecipe() {
     const form = document.getElementById('recipeForm');

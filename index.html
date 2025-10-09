@@ -2,7 +2,13 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    
+    <!-- MFI対応 -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="RecipeBox">
     
     <!-- SEO基本情報 -->
     <title>RecipeBox - 高機能レシピ管理システム | 材料計算・黒い砂漠対応</title>
@@ -75,6 +81,9 @@
         "applicationCategory": ["UtilityApplication", "GameApplication"],
         "operatingSystem": "Web Browser",
         "browserRequirements": "Requires JavaScript ES6+, HTML5, CSS3",
+        "memoryRequirements": "512MB RAM",
+        "storageRequirements": "10MB",
+        "permissions": "storage",
         "offers": {
             "@type": "Offer",
             "price": "0",
@@ -114,16 +123,22 @@
     </script>
 </head>
 <body data-theme="dark">
-    <div class="container">
+    <!-- MFI: アクセシビリティ向上（スキップリンク） -->
+    <a href="#main-content" class="skip-link">メインコンテンツにスキップ</a>
+    
+    <div class="container" id="main-content" role="main">
         <!-- Header -->
-        <header class="header">
+        <header class="header" role="banner">
             <div class="header-content">
                 <h1 class="logo">
-                    <i class="fas fa-archive"></i>
-                    RecipeBox
+                    <i class="fas fa-archive" aria-hidden="true"></i>
+                    <span>RecipeBox - レシピ管理システム</span>
                 </h1>
-                <button class="theme-toggle" id="themeToggle" title="ライトテーマに切り替える">
-                    <i class="fas fa-moon" id="themeIcon"></i>
+                <button class="theme-toggle" id="themeToggle" 
+                        title="ライトテーマに切り替える" 
+                        aria-label="テーマを切り替える"
+                        role="button">
+                    <i class="fas fa-moon" id="themeIcon" aria-hidden="true"></i>
                 </button>
             </div>
         </header>
@@ -208,9 +223,16 @@
                             </select>
                         </div>
                         <div class="recipe-tree-container" id="recipeTreeContainer" style="display: none;">
-                            <h3><i class="fas fa-sitemap"></i> レシピ構成ツリー</h3>
+                            <h3 class="recipe-tree-title"><i class="fas fa-sitemap"></i> レシピ構成ツリー</h3>
                             <div class="recipe-tree" id="recipeTree">
                                 <!-- ツリー構造がここに表示されます -->
+                            </div>
+                        </div>
+                        
+                        <!-- 小画面用独立レシピリストコンテナ -->
+                        <div class="recipe-list-container" id="recipeListContainer" style="display: none;">
+                            <div id="recipeList">
+                                <!-- リスト形式の材料がここに表示されます -->
                             </div>
                         </div>
                     </div>
@@ -259,18 +281,23 @@
                 <span class="close" onclick="closeRecipeManager()">&times;</span>
             </div>
             <div class="modal-body">
-                <form id="recipeForm">
+                <form id="recipeForm" role="form" aria-labelledby="modalTitle">
                     <div class="form-group">
                         <label for="recipeName">レシピ名:</label>
-                        <input type="text" id="recipeName" required>
+                        <input type="text" id="recipeName" required 
+                               aria-describedby="recipeNameHelp"
+                               aria-required="true">
+                        <small id="recipeNameHelp" class="form-help">レシピの名前を入力してください</small>
                     </div>
                     <div class="form-group">
                         <label for="baseQuantity">基本作成数:</label>
-                        <input type="number" id="baseQuantity" value="1" min="1">
+                        <input type="number" id="baseQuantity" value="1" min="1" 
+                               aria-describedby="quantityHelp">
+                        <small id="quantityHelp" class="form-help">一度に作成する数量を指定してください</small>
                     </div>
                     <div class="form-group">
                         <label for="recipeIcon">アイコン:</label>
-                        <select id="recipeIcon">
+                        <select id="recipeIcon" aria-describedby="iconHelp">
                             <option value="fa-utensils">デフォルト</option>
                             <option value="fa-cheese">チーズ</option>
                             <option value="fa-bread-slice">パン</option>
@@ -282,6 +309,7 @@
                             <option value="fa-flask">薬品</option>
                             <option value="fa-fire">調理</option>
                         </select>
+                        <small id="iconHelp" class="form-help">レシピに表示するアイコンを選択してください</small>
                     </div>
 
                     <div class="form-group">
