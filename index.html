@@ -5,34 +5,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <!-- SEO基本情報 -->
-    <title>RecipeBox - 高機能レシピ管理システム | 材料計算対応</title>
-    <meta name="description" content="複雑なレシピと材料の依存関係を効率的に管理。100個以上のレシピ対応、材料の自動計算機能を搭載した無料のウェブアプリケーション。">
-    <meta name="keywords" content="レシピ管理,材料計算,料理,レシピアプリ,食材管理,クッキング,レシピ作成,材料リスト">
-    <meta name="author" content="RecipeBox">
-    <meta name="robots" content="index, follow">
-    <meta name="language" content="Japanese">
+    <title>RecipeBox - 高機能レシピ管理システム | 材料計算・黒い砂漠対応</title>
+    <meta name="description" content="複雑なレシピと材料の依存関係を効率的に管理。黒い砂漠やMMORPGのアイテム制作、料理レシピに最適。100個以上のレシピ対応、材料の自動計算機能を搭載した無料のウェブアプリケーション。">
+    <meta name="author" content="NimaProgram">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+    <meta name="language" content="ja">
+    <meta name="theme-color" content="#4a90e2">
+    
+    <!-- 追加のSEOメタタグ -->
+    <meta name="application-name" content="RecipeBox">
+    <meta name="msapplication-TileColor" content="#4a90e2">
+    <meta name="format-detection" content="telephone=no">
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://nimaprogram.github.io/Recipebox/">
-    <meta property="og:title" content="RecipeBox - 高機能レシピ管理システム">
-    <meta property="og:description" content="複雑なレシピと材料の依存関係を効率的に管理。100個以上のレシピ対応、材料の自動計算機能を搭載。">
+    <meta property="og:title" content="RecipeBox - 黒い砂漠対応レシピ管理システム">
+    <meta property="og:description" content="複雑なレシピと材料の依存関係を効率的に管理。黒い砂漠やMMORPGのアイテム制作、料理レシピに最適。100個以上のレシピ対応、材料の自動計算機能を搭載。">
     <meta property="og:image" content="https://nimaprogram.github.io/Recipebox/favicon.svg">
+    <meta property="og:image:alt" content="RecipeBox - レシピ管理システムのロゴ">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
     <meta property="og:site_name" content="RecipeBox">
     <meta property="og:locale" content="ja_JP">
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://nimaprogram.github.io/Recipebox/">
-    <meta property="twitter:title" content="RecipeBox - 高機能レシピ管理システム">
-    <meta property="twitter:description" content="複雑なレシピと材料の依存関係を効率的に管理。100個以上のレシピ対応、材料の自動計算機能を搭載。">
+    <meta property="twitter:title" content="RecipeBox - 黒い砂漠対応レシピ管理システム">
+    <meta property="twitter:description" content="複雑なレシピと材料の依存関係を効率的に管理。黒い砂漠やMMORPGのアイテム制作、料理レシピに最適。100個以上のレシピ対応、材料の自動計算機能を搭載。">
     <meta property="twitter:image" content="https://nimaprogram.github.io/Recipebox/favicon.svg">
+    <meta property="twitter:image:alt" content="RecipeBox - レシピ管理システム">
+    <meta property="twitter:creator" content="@NimaProgram">
+    <meta property="twitter:site" content="@NimaProgram">
     
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    <link rel="icon" type="image/png" sizes="32x32" href="favicon.svg">
-    <link rel="icon" type="image/png" sizes="16x16" href="favicon.svg">
-    <link rel="apple-touch-icon" href="favicon.svg">
+    <link rel="alternate icon" type="image/x-icon" href="favicon.svg">
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon.svg">
+    <link rel="mask-icon" href="favicon.svg" color="#4a90e2">
     
     <!-- Canonical URL -->
     <link rel="canonical" href="https://nimaprogram.github.io/Recipebox/">
@@ -42,8 +53,15 @@
     
     <!-- CSS -->
     <link rel="stylesheet" href="styles.css">
+    
+    <!-- 外部フォント（最適化） -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- 外部アイコン（最適化） -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" crossorigin="anonymous">
     
     <!-- Structured Data (JSON-LD) -->
     <script type="application/ld+json">
@@ -51,30 +69,47 @@
         "@context": "https://schema.org",
         "@type": "WebApplication",
         "name": "RecipeBox",
-        "description": "複雑なレシピと材料の依存関係を効率的に管理できる高機能レシピ管理システム",
+        "alternateName": "RecipeBox - レシピ管理システム",
+        "description": "複雑なレシピと材料の依存関係を効率的に管理できる高機能レシピ管理システム。黒い砂漠やMMORPGのアイテム制作に最適。",
         "url": "https://nimaprogram.github.io/Recipebox/",
-        "applicationCategory": "UtilityApplication",
+        "applicationCategory": ["UtilityApplication", "GameApplication"],
         "operatingSystem": "Web Browser",
-        "browserRequirements": "Requires JavaScript. Requires HTML5.",
+        "browserRequirements": "Requires JavaScript ES6+, HTML5, CSS3",
         "offers": {
             "@type": "Offer",
             "price": "0",
-            "priceCurrency": "JPY"
+            "priceCurrency": "JPY",
+            "availability": "https://schema.org/InStock"
         },
         "featureList": [
             "レシピ管理",
             "材料計算",
             "階層構造での材料展開",
             "JSONインポート・エクスポート",
-            "ダークテーマ対応"
+            "ダークテーマ対応",
+            "黒い砂漠レシピ対応",
+            "ゲームアイテム制作管理",
+            "PWA対応",
+            "オフライン機能"
         ],
-        "screenshot": "https://nimaprogram.github.io/Recipebox/favicon.svg",
         "author": {
             "@type": "Person",
-            "name": "RecipeBox Team"
+            "name": "NimaProgram",
+            "url": "https://github.com/NimaProgram"
         },
+        "creator": {
+            "@type": "Person", 
+            "name": "NimaProgram"
+        },
+        "dateCreated": "2025-10-10",
         "dateModified": "2025-10-10",
-        "inLanguage": "ja"
+        "datePublished": "2025-10-10",
+        "inLanguage": "ja",
+        "keywords": ["レシピ管理", "材料計算", "黒い砂漠", "MMORPG", "ゲーム攻略", "料理レシピ"],
+        "audience": {
+            "@type": "Audience",
+            "audienceType": ["ゲーマー", "料理愛好家", "効率化を求める人"]
+        }
     }
     </script>
 </head>
@@ -104,7 +139,7 @@
                     <h2>レシピ管理システムへようこそ！</h2>
                     <p class="welcome-description">
                         複雑なレシピと材料の依存関係を効率的に管理できるツールです。<br>
-                        100個以上のレシピにも対応し、材料の自動計算が可能です。
+                        黒い砂漠の料理レシピやアイテム制作、100個以上のレシピにも対応し、材料の自動計算が可能です。
                     </p>
                     
                     <!-- 機能紹介 -->
@@ -113,6 +148,7 @@
                         <ul class="feature-list">
                             <li><i class="fas fa-calculator"></i> 自動材料計算 - 必要な材料を瞬時に算出</li>
                             <li><i class="fas fa-sitemap"></i> 階層レシピ - 複雑な依存関係も簡単管理</li>
+                            <li><i class="fas fa-gamepad"></i> ゲーム対応 - 黒い砂漠のアイテム制作に最適</li>
                             <li><i class="fas fa-download"></i> データ保存 - JSONで簡単バックアップ・復元</li>
                             <li><i class="fas fa-moon"></i> ダークテーマ - 目に優しい表示モード対応</li>
                         </ul>
