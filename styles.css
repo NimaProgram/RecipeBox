@@ -132,8 +132,25 @@
     --scrollbar-thumb-hover: linear-gradient(135deg, #2563eb, #7c3aed);
 }
 
+/* フォントメトリクスオーバーライド（レイアウトシフト軽減） */
+@font-face {
+    font-family: 'Poppins-fallback';
+    size-adjust: 106%;
+    ascent-override: 105%;
+    descent-override: 35%;
+    line-gap-override: 10%;
+    src: local('Arial');
+}
+
+/* Font Awesomeアイコンのレイアウトシフト防止 */
+.fas, .far, .fab, .fal, .fa {
+    width: 1em;
+    display: inline-block;
+    text-align: center;
+}
+
 body {
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Poppins', 'Poppins-fallback', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     background: var(--bg-gradient);
     min-height: 100vh;
     color: var(--text-primary);
@@ -257,7 +274,7 @@ body {
 .logo {
     font-size: 1.5rem;
     font-weight: 700;
-    color: var(--text-color);
+    color: var(--text-primary);
     display: flex;
     align-items: center;
     gap: 8px;
@@ -653,7 +670,7 @@ body {
 .ingredient-name {
     font-size: 1rem;
     font-weight: 600;
-    color: var(--text-color);
+    color: var(--text-primary);
     margin: 0 0 4px 0;
     transition: color 0.3s ease;
     line-height: 1.2;
@@ -1720,6 +1737,11 @@ body {
     font-size: 4em;
     color: var(--primary-color);
     margin-bottom: 20px;
+    width: 1em;
+    height: 1em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .welcome-card h2 {
@@ -1814,7 +1836,7 @@ body {
     gap: 12px;
     padding: 8px 0;
     font-size: 1rem;
-    color: var(--text-color);
+    color: var(--text-primary);
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
