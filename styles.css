@@ -147,6 +147,21 @@
     width: 1em;
     display: inline-block;
     text-align: center;
+    /* さらなるレイアウト安定性 */
+    min-height: 1em;
+    vertical-align: baseline;
+}
+
+/* ページ全体のレイアウト安定性向上 */
+.main-content {
+    contain: layout style;
+}
+
+/* フォント読み込み時のplaceholder */
+@font-face {
+    font-family: 'FontAwesome-fallback';
+    src: local('Arial'), local('sans-serif');
+    font-display: swap;
 }
 
 body {
@@ -1723,7 +1738,8 @@ body {
     text-align: center;
     width: 900px;
     max-width: 90vw;
-    min-height: 400px;
+    min-height: 600px;
+    height: auto;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -1731,6 +1747,9 @@ body {
     box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(15px);
     border: 2px solid rgba(74, 144, 226, 0.2);
+    /* レイアウト安定性の向上 */
+    contain: layout style;
+    will-change: auto;
 }
 
 .welcome-icon {
@@ -1814,6 +1833,9 @@ body {
     padding: 25px;
     border-radius: 15px;
     border: 1px solid rgba(255, 255, 255, 0.1);
+    /* レイアウト安定性 */
+    min-height: 200px;
+    contain: layout style;
 }
 
 .feature-highlights h3 {

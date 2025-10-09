@@ -225,14 +225,23 @@
     <noscript><link rel="stylesheet" href="styles.css"></noscript>
     
     <!-- 外部フォント（非同期読み込み） -->
+    <!-- Resource Hints for Performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=optional" 
           rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=optional" rel="stylesheet"></noscript>
     
-    <!-- 外部アイコン（非同期読み込み） -->
+    <!-- 外部アイコン（最適化済み） -->
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+    <!-- Font Awesome woff2 直接プリロード -->
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/webfonts/fa-solid-900.woff2" 
+          as="font" type="font/woff2" crossorigin="anonymous">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/webfonts/fa-regular-400.woff2" 
+          as="font" type="font/woff2" crossorigin="anonymous">
     <link rel="stylesheet" 
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" 
           crossorigin="anonymous" 
@@ -568,11 +577,13 @@
     <!-- Hidden file input for import -->
     <input type="file" id="fileInput" accept=".json" style="display: none;" onchange="handleFileImport(event)">
 
-    <!-- Critical JavaScript files (synchronous) -->
+    <!-- Critical JavaScript files (for initial render) -->
     <script src="js/theme-manager.js"></script>
-    <script src="js/database.js"></script>
-    <script src="js/custom-dropdown.js"></script>
-    <script src="js/dropdown-integration.js"></script>
+    
+    <!-- Core JavaScript files (deferred but high priority) -->
+    <script src="js/database.js" defer></script>
+    <script src="js/custom-dropdown.js" defer></script>
+    <script src="js/dropdown-integration.js" defer></script>
     
     <!-- Non-critical JavaScript files (deferred) -->
     <script src="js/recipe-manager.js" defer></script>
