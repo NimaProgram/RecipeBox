@@ -107,7 +107,7 @@ function loadFromLocalStorage() {
 
 // LocalStorageを完全にクリア
 function clearAllLocalStorage() {
-    if (confirm('すべてのレシピデータと在庫データ、バックアップを完全に削除しますか？\n\nこの操作は取り消せません。')) {
+    if (confirm('すべてのレシピデータとバックアップを完全に削除しますか？\n\nこの操作は取り消せません。')) {
         try {
             // すべてのレシピ関連データを削除
             const keys = Object.keys(localStorage);

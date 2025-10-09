@@ -10,7 +10,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - 🎉 初回リリース
 - 📊 自動材料計算システム
-- 📦 在庫管理機能（チェックボックス対応）
 - 🏗️ 階層レシピ管理（折りたたみ対応）
 - 💾 JSONデータ保存・復元機能
 - 🎨 ダークテーマ・ライトテーマ切り替え
@@ -31,7 +30,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### UI/UX Improvements
 - 直感的なレシピ作成フロー
 - リアルタイム材料計算
-- 視覚的な在庫状況表示
 - スムーズなアニメーション
 - モーダル管理システム
 - z-index階層の最適化
