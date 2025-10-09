@@ -1128,7 +1128,7 @@ body {
     backdrop-filter: blur(15px);
     border: 2px solid rgba(74, 144, 226, 0.3);
     position: relative;
-    overflow: visible;
+    overflow: hidden;
     z-index: 1;
 }
 
@@ -1154,6 +1154,7 @@ body {
     height: 4px;
     background: linear-gradient(90deg, var(--primary-color), var(--accent-color), var(--primary-color));
     opacity: 0.8;
+    border-radius: 20px 20px 0 0;
 }
 
 .recipe-management-card h2 {
@@ -1705,6 +1706,7 @@ body {
     background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
     opacity: 0;
     transition: opacity 0.3s ease;
+    border-radius: 8px 8px 0 0;
 }
 
 .stat-item:hover {
