@@ -57,17 +57,188 @@
     <!-- PWA Manifest -->
     <link rel="manifest" href="manifest.json">
     
-    <!-- CSS -->
-    <link rel="stylesheet" href="styles.css">
+    <!-- Critical CSS (Inline) -->
+    <style>
+        /* Critical CSS - Above the fold styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #1e40af;
+            --primary-hover: #1d4ed8;
+            --accent-color: #dc2626;
+            --text-primary: #111827;
+            --text-secondary: #374151;
+            --text-muted: #6b7280;
+            --text-inverse: #ffffff;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f9fafb;
+            --bg-accent: #f3f4f6;
+            --bg-gradient: linear-gradient(135deg, #1e293b 0%, #334155 30%, #64748b 100%);
+            --border-color: #d1d5db;
+            --border-dark: #9ca3af;
+        }
+
+        [data-theme="dark"] {
+            --primary-color: #3b82f6;
+            --primary-hover: #2563eb;
+            --accent-color: #ef4444;
+            --text-primary: #f9fafb;
+            --text-secondary: #d1d5db;
+            --text-muted: #9ca3af;
+            --text-inverse: #111827;
+            --bg-primary: #111827;
+            --bg-secondary: #1f2937;
+            --bg-accent: #374151;
+            --border-color: #374151;
+            --border-dark: #4b5563;
+        }
+
+        body {
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            min-height: calc(100vh - 60px);
+            padding: 30px 0;
+        }
+
+        .header {
+            background: var(--bg-primary);
+            padding: 20px;
+            border-bottom: 2px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .theme-toggle {
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .main-content {
+            padding: 20px;
+        }
+
+        .welcome-section {
+            text-align: center;
+            padding: 30px;
+            background: var(--bg-gradient);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            color: var(--text-inverse);
+        }
+
+        .welcome-card {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .welcome-icon {
+            margin-bottom: 20px;
+        }
+
+        .welcome-icon i {
+            font-size: 2rem;
+            color: var(--text-inverse);
+        }
+
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 6px;
+            background: var(--primary-color);
+            color: var(--text-inverse);
+            padding: 8px;
+            text-decoration: none;
+            z-index: 10000;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .skip-link:focus {
+            top: 6px;
+        }
+
+        /* Mobile optimizations */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px 0;
+            }
+            
+            .header {
+                padding: 15px;
+            }
+            
+            .header-content {
+                padding: 0 10px;
+            }
+            
+            .logo {
+                font-size: 1.2rem;
+                gap: 8px;
+            }
+            
+            .welcome-section {
+                padding: 20px;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
     
-    <!-- 外部フォント（最適化） -->
+    <!-- Main CSS (Deferred loading) -->
+    <link rel="preload" href="styles.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="styles.css"></noscript>
+    
+    <!-- 外部フォント（非同期読み込み） -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" 
+          rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
     
-    <!-- 外部アイコン（最適化） -->
+    <!-- 外部アイコン（非同期読み込み） -->
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" 
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" 
+          crossorigin="anonymous" 
+          media="print" 
+          onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" crossorigin="anonymous"></noscript>
     
     <!-- Structured Data (JSON-LD) -->
     <script type="application/ld+json">
@@ -397,16 +568,18 @@
     <!-- Hidden file input for import -->
     <input type="file" id="fileInput" accept=".json" style="display: none;" onchange="handleFileImport(event)">
 
-    <!-- JavaScript files -->
+    <!-- Critical JavaScript files (synchronous) -->
     <script src="js/theme-manager.js"></script>
+    <script src="js/database.js"></script>
     <script src="js/custom-dropdown.js"></script>
     <script src="js/dropdown-integration.js"></script>
-    <script src="js/database.js"></script>
-    <script src="js/recipe-manager.js"></script>
-    <script src="js/ui-manager.js"></script>
-    <script src="js/inventory-manager.js"></script>
-    <script src="js/file-manager.js"></script>
-    <script src="script.js"></script>
+    
+    <!-- Non-critical JavaScript files (deferred) -->
+    <script src="js/recipe-manager.js" defer></script>
+    <script src="js/ui-manager.js" defer></script>
+    <script src="js/inventory-manager.js" defer></script>
+    <script src="js/file-manager.js" defer></script>
+    <script src="script.js" defer></script>
     
     <!-- PWA Service Worker -->
     <script>
