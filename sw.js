@@ -1,19 +1,19 @@
 const CACHE_NAME = 'recipebox-v1.1.0-mfi';
 const urlsToCache = [
-    '/',
-    '/index.html',
-    '/styles.css',
-    '/script.js',
-    '/favicon.svg',
-    '/manifest.json',
-    '/js/theme-manager.js',
-    '/js/custom-dropdown.js',
-    '/js/dropdown-integration.js',
-    '/js/database.js',
-    '/js/recipe-manager.js',
-    '/js/ui-manager.js',
-    '/js/inventory-manager.js',
-    '/js/file-manager.js'
+    './',
+    './index.html',
+    './styles.css',
+    './script.js',
+    './favicon.svg',
+    './manifest.json',
+    './js/theme-manager.js',
+    './js/custom-dropdown.js',
+    './js/dropdown-integration.js',
+    './js/database.js',
+    './js/recipe-manager.js',
+    './js/ui-manager.js',
+    './js/inventory-manager.js',
+    './js/file-manager.js'
 ];
 
 // MFI対応: より高速なキャッシュ戦略

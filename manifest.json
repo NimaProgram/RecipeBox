@@ -2,8 +2,8 @@
     "name": "RecipeBox - 高機能レシピ管理システム",
     "short_name": "RecipeBox",
     "description": "複雑なレシピと材料の依存関係を効率的に管理。黒い砂漠やMMORPGのアイテム制作に最適な高機能レシピ管理システム",
-    "start_url": "/",
-    "scope": "/",
+    "start_url": "./",
+    "scope": "./",
     "display": "standalone",
     "background_color": "#1a1a2e",
     "theme_color": "#4a90e2",
@@ -32,14 +32,14 @@
             "name": "レシピ作成",
             "short_name": "作成",
             "description": "新しいレシピを作成",
-            "url": "/#create",
+            "url": "./#create",
             "icons": [{"src": "favicon.svg", "sizes": "96x96"}]
         },
         {
             "name": "材料計算",
             "short_name": "計算",
             "description": "材料を計算",
-            "url": "/#calculator",
+            "url": "./#calculator",
             "icons": [{"src": "favicon.svg", "sizes": "96x96"}]
         }
     ]
