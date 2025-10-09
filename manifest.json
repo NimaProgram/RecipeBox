@@ -1,0 +1,29 @@
+{
+    "name": "RecipeBox - 高機能レシピ管理システム",
+    "short_name": "RecipeBox",
+    "description": "複雑なレシピと材料の依存関係を効率的に管理できる高機能レシピ管理システム",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#1a1a2e",
+    "theme_color": "#4a90e2",
+    "orientation": "portrait-primary",
+    "categories": ["utilities", "productivity", "food"],
+    "lang": "ja",
+    "icons": [
+        {
+            "src": "favicon.svg",
+            "sizes": "any",
+            "type": "image/svg+xml",
+            "purpose": "any maskable"
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "favicon.svg",
+            "sizes": "512x512",
+            "type": "image/svg+xml",
+            "platform": "wide",
+            "label": "RecipeBox メイン画面"
+        }
+    ]
+}

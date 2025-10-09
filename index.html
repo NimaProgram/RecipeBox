@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO基本情報 -->
+    <title>RecipeBox - 高機能レシピ管理システム | 材料計算・在庫管理対応</title>
+    <meta name="description" content="複雑なレシピと材料の依存関係を効率的に管理。100個以上のレシピ対応、材料の自動計算、在庫管理機能を搭載した無料のウェブアプリケーション。">
+    <meta name="keywords" content="レシピ管理,材料計算,在庫管理,料理,レシピアプリ,食材管理,クッキング,レシピ作成,材料リスト">
+    <meta name="author" content="RecipeBox">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="Japanese">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://nimaprogram.github.io/Recipebox/">
+    <meta property="og:title" content="RecipeBox - 高機能レシピ管理システム">
+    <meta property="og:description" content="複雑なレシピと材料の依存関係を効率的に管理。100個以上のレシピ対応、材料の自動計算、在庫管理機能を搭載。">
+    <meta property="og:image" content="https://nimaprogram.github.io/Recipebox/favicon.svg">
+    <meta property="og:site_name" content="RecipeBox">
+    <meta property="og:locale" content="ja_JP">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://nimaprogram.github.io/Recipebox/">
+    <meta property="twitter:title" content="RecipeBox - 高機能レシピ管理システム">
+    <meta property="twitter:description" content="複雑なレシピと材料の依存関係を効率的に管理。100個以上のレシピ対応、材料の自動計算、在庫管理機能を搭載。">
+    <meta property="twitter:image" content="https://nimaprogram.github.io/Recipebox/favicon.svg">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon.svg">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon.svg">
+    <link rel="apple-touch-icon" href="favicon.svg">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://nimaprogram.github.io/Recipebox/">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "RecipeBox",
+        "description": "複雑なレシピと材料の依存関係を効率的に管理できる高機能レシピ管理システム",
+        "url": "https://nimaprogram.github.io/Recipebox/",
+        "applicationCategory": "UtilityApplication",
+        "operatingSystem": "Web Browser",
+        "browserRequirements": "Requires JavaScript. Requires HTML5.",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "JPY"
+        },
+        "featureList": [
+            "レシピ管理",
+            "材料計算",
+            "在庫管理",
+            "階層構造での材料展開",
+            "JSONインポート・エクスポート",
+            "ダークテーマ対応"
+        ],
+        "screenshot": "https://nimaprogram.github.io/Recipebox/favicon.svg",
+        "author": {
+            "@type": "Person",
+            "name": "RecipeBox Team"
+        },
+        "dateModified": "2025-10-10",
+        "inLanguage": "ja"
+    }
+    </script>
+</head>
+<body data-theme="dark">
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1 class="logo">
+                    <i class="fas fa-archive"></i>
+                    RecipeBox
+                </h1>
+                <button class="theme-toggle" id="themeToggle" title="ライトテーマに切り替える">
+                    <i class="fas fa-moon" id="themeIcon"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- ウェルカムセクション -->
+            <section class="welcome-section" id="welcomeSection">
+                <div class="welcome-card">
+                    <div class="welcome-icon">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    <h2>レシピ管理システムへようこそ！</h2>
+                    <p class="welcome-description">
+                        複雑なレシピと材料の依存関係を効率的に管理できるツールです。<br>
+                        100個以上のレシピにも対応し、材料の自動計算と在庫管理が可能です。
+                    </p>
+                    
+                    <!-- 機能紹介 -->
+                    <div class="feature-highlights">
+                        <h3>主な機能</h3>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-calculator"></i> 自動材料計算 - 必要な材料を瞬時に算出</li>
+                            <li><i class="fas fa-boxes"></i> 在庫管理 - 材料の在庫状況をリアルタイム追跡</li>
+                            <li><i class="fas fa-sitemap"></i> 階層レシピ - 複雑な依存関係も簡単管理</li>
+                            <li><i class="fas fa-download"></i> データ保存 - JSONで簡単バックアップ・復元</li>
+                            <li><i class="fas fa-moon"></i> ダークテーマ - 目に優しい表示モード対応</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="welcome-actions">
+                        <button class="welcome-btn primary" onclick="showRecipeManager()">
+                            <i class="fas fa-plus"></i> 最初のレシピを作成
+                        </button>
+                        <button class="welcome-btn secondary" id="welcomeImportBtn">
+                            <i class="fas fa-upload"></i> レシピをインポート
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+
+
+            <!-- Recipe Management -->
+            <section class="recipe-management-section" style="display: none;">
+                <div class="section-header">
+                    <h2><i class="fas fa-database"></i> レシピ管理</h2>
+                    <div class="recipe-search-bar">
+                        <input type="text" id="quickSearch" placeholder="レシピを検索..." onkeyup="quickSearchRecipes()">
+                        <button class="search-btn" onclick="showRecipeList()">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                    <div class="management-buttons">
+                        <button class="management-btn primary" onclick="showRecipeManager()">
+                            <i class="fas fa-plus"></i> レシピ追加
+                        </button>
+                        <button class="management-btn secondary" onclick="showRecipeList()">
+                            <i class="fas fa-list"></i> レシピ一覧
+                        </button>
+                        <button class="management-btn secondary" id="exportBtn">
+                            <i class="fas fa-download"></i> エクスポート
+                        </button>
+                        <button class="management-btn secondary" id="importBtn">
+                            <i class="fas fa-upload"></i> インポート
+                        </button>
+                        <button class="management-btn tertiary" onclick="showBackupList()">
+                            <i class="fas fa-history"></i> バックアップ
+                        </button>
+                        <button class="management-btn danger" onclick="clearAllLocalStorage()">
+                            <i class="fas fa-trash-alt"></i> 全データ削除
+                        </button>
+                    </div>
+                </div>
+                <div class="recipe-card recipe-management-card">
+                    <div class="recipe-selector-section">
+                        <h3><i class="fas fa-utensils"></i> レシピ選択</h3>
+                        <div class="recipe-selector">
+                            <label for="selectedRecipe">計算対象のレシピ:</label>
+                            <select id="selectedRecipe" onchange="onRecipeSelected()">
+                                <option value="">レシピを選択してください</option>
+                            </select>
+                        </div>
+                        <div class="recipe-tree-container" id="recipeTreeContainer" style="display: none;">
+                            <h3><i class="fas fa-sitemap"></i> レシピ構成ツリー</h3>
+                            <div class="recipe-tree" id="recipeTree">
+                                <!-- ツリー構造がここに表示されます -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="recipe-stats">
+                        <div class="stat-item">
+                            <span class="stat-label">登録レシピ数</span>
+                            <span class="stat-value" id="recipeCount">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">基本材料数</span>
+                            <span class="stat-value" id="basicItemCount">0</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Material Calculator -->
+            <section class="calculator-section" style="display: none;">
+                <div class="section-header">
+                    <h2><i class="fas fa-calculator"></i> 材料計算機</h2>
+                </div>
+                <div class="calculator-card">
+                    <div class="calculator-input">
+                        <label for="quantity">作りたい個数:</label>
+                        <input type="number" id="quantity" value="100" min="1" max="1000">
+                        <button onclick="calculateMaterialsNew()">計算</button>
+                    </div>
+                    <div class="calculation-result" id="calculationResult">
+                        <!-- 計算結果がここに表示されます -->
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+                        <p>© 2025 RecipeBox. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <!-- Recipe Manager Modal -->
+    <div id="recipeManagerModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">レシピ追加</h3>
+                <span class="close" onclick="closeRecipeManager()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="recipeForm">
+                    <div class="form-group">
+                        <label for="recipeName">レシピ名:</label>
+                        <input type="text" id="recipeName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="baseQuantity">基本作成数:</label>
+                        <input type="number" id="baseQuantity" value="1" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="recipeIcon">アイコン:</label>
+                        <select id="recipeIcon">
+                            <option value="fa-utensils">デフォルト</option>
+                            <option value="fa-cheese">チーズ</option>
+                            <option value="fa-bread-slice">パン</option>
+                            <option value="fa-egg">卵</option>
+                            <option value="fa-glass-water">液体</option>
+                            <option value="fa-ice-cream">クリーム</option>
+                            <option value="fa-butter">バター</option>
+                            <option value="fa-cube">固体</option>
+                            <option value="fa-flask">薬品</option>
+                            <option value="fa-fire">調理</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>材料:</label>
+                        <div id="ingredientsList">
+                            <!-- 材料リストがここに表示されます -->
+                        </div>
+                        <button type="button" onclick="addIngredient()" class="add-ingredient-btn">
+                            <i class="fas fa-plus"></i> 材料追加
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="closeRecipeManager()" class="cancel-btn">キャンセル</button>
+                <button type="button" onclick="saveRecipe()" class="save-btn">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recipe List Modal -->
+    <div id="recipeListModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>レシピ一覧</h3>
+                <span class="close" onclick="closeRecipeList()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="recipe-filter">
+                    <input type="text" id="recipeSearch" placeholder="レシピを検索..." onkeyup="filterRecipes()">
+                    <select id="recipeTypeFilter" onchange="filterRecipes()">
+                        <option value="all">全て</option>
+                        <option value="basic">基本材料</option>
+                        <option value="recipe">レシピ</option>
+                    </select>
+                </div>
+                <div id="recipeListContent">
+                    <!-- レシピリストがここに表示されます -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Ingredient Modal -->
+    <div id="addIngredientModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>新しい材料を追加</h3>
+                <span class="close" onclick="closeAddIngredientModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="addIngredientForm">
+                    <div class="form-group">
+                        <label for="newIngredientName">材料名:</label>
+                        <input type="text" id="newIngredientName" required placeholder="例: トマト, 小麦粉, 砂糖">
+                    </div>
+                    <div class="form-group">
+                        <label for="newIngredientIcon">アイコン:</label>
+                        <select id="newIngredientIcon">
+                            <option value="fa-utensils">🍴 基本</option>
+                            <option value="fa-egg">🥚 卵</option>
+                            <option value="fa-glass-water">🥛 液体</option>
+                            <option value="fa-bread-slice">🍞 パン/生地</option>
+                            <option value="fa-cheese">🧀 チーズ</option>
+                            <option value="fa-butter">🧈 バター</option>
+                            <option value="fa-ice-cream">🍦 クリーム</option>
+                            <option value="fa-salt-shaker">🧂 調味料</option>
+                            <option value="fa-cube">⬜ 粉/固形</option>
+                            <option value="fa-fish">🐟 魚</option>
+                            <option value="fa-drumstick-bite">🍗 肉</option>
+                            <option value="fa-carrot">🥕 野菜</option>
+                            <option value="fa-apple-alt">🍎 果物</option>
+                        </select>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="closeAddIngredientModal()" class="cancel-btn">キャンセル</button>
+                <button type="button" onclick="saveNewIngredient()" class="save-btn">追加</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden file input for import -->
+    <input type="file" id="fileInput" accept=".json" style="display: none;" onchange="handleFileImport(event)">
+
+    <!-- JavaScript files -->
+    <script src="js/theme-manager.js"></script>
+    <script src="js/custom-dropdown.js"></script>
+    <script src="js/dropdown-integration.js"></script>
+    <script src="js/database.js"></script>
+    <script src="js/recipe-manager.js"></script>
+    <script src="js/ui-manager.js"></script>
+    <script src="js/inventory-manager.js"></script>
+    <script src="js/file-manager.js"></script>
+    <script src="script.js"></script>
+    
+    <!-- PWA Service Worker -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(function(registration) {
+                        console.log('ServiceWorker registration successful');
+                    })
+                    .catch(function(err) {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>

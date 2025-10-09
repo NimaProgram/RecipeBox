@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://nimaprogram.github.io/Recipebox/sitemap.xml
+
+# Cache control
+Disallow: /js/
+Disallow: *.js$
+
+# Allow specific important files
+Allow: /favicon.svg
+Allow: /styles.css
