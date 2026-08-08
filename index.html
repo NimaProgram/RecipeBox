@@ -2,27 +2,25 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
-    
-    <!-- MFI対応 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+    <!-- MFI / PWA -->
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="RecipeBox">
-    
-    <!-- SEO基本情報 -->
+
+    <!-- SEO -->
     <title>RecipeBox - 高機能レシピ管理システム | 材料計算・黒い砂漠対応</title>
     <meta name="description" content="複雑なレシピと材料の依存関係を効率的に管理。黒い砂漠やMMORPGのアイテム制作、料理レシピに最適。100個以上のレシピ対応、材料の自動計算機能を搭載した無料のウェブアプリケーション。">
     <meta name="author" content="NimaProgram">
     <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
     <meta name="language" content="ja">
-    <meta name="theme-color" content="#4a90e2">
-    
-    <!-- 追加のSEOメタタグ -->
+    <meta name="theme-color" content="#ffffff">
     <meta name="application-name" content="RecipeBox">
     <meta name="msapplication-TileColor" content="#4a90e2">
     <meta name="format-detection" content="telephone=no">
-    
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://nimaprogram.github.io/Recipebox/">
@@ -30,225 +28,56 @@
     <meta property="og:description" content="複雑なレシピと材料の依存関係を効率的に管理。黒い砂漠やMMORPGのアイテム制作、料理レシピに最適。100個以上のレシピ対応、材料の自動計算機能を搭載。">
     <meta property="og:image" content="https://nimaprogram.github.io/Recipebox/favicon.svg">
     <meta property="og:image:alt" content="RecipeBox - レシピ管理システムのロゴ">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
     <meta property="og:site_name" content="RecipeBox">
     <meta property="og:locale" content="ja_JP">
-    
+
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://nimaprogram.github.io/Recipebox/">
     <meta property="twitter:title" content="RecipeBox - 黒い砂漠対応レシピ管理システム">
-    <meta property="twitter:description" content="複雑なレシピと材料の依存関係を効率的に管理。黒い砂漠やMMORPGのアイテム制作、料理レシピに最適。100個以上のレシピ対応、材料の自動計算機能を搭載。">
+    <meta property="twitter:description" content="複雑なレシピと材料の依存関係を効率的に管理。黒い砂漠やMMORPGのアイテム制作、料理レシピに最適。">
     <meta property="twitter:image" content="https://nimaprogram.github.io/Recipebox/favicon.svg">
-    <meta property="twitter:image:alt" content="RecipeBox - レシピ管理システム">
     <meta property="twitter:creator" content="@NimaProgram">
     <meta property="twitter:site" content="@NimaProgram">
-    
+
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    <link rel="alternate icon" type="image/x-icon" href="favicon.svg">
     <link rel="apple-touch-icon" sizes="180x180" href="favicon.svg">
     <link rel="mask-icon" href="favicon.svg" color="#4a90e2">
-    
-    <!-- Canonical URL -->
     <link rel="canonical" href="https://nimaprogram.github.io/Recipebox/">
-    
-    <!-- PWA Manifest -->
     <link rel="manifest" href="manifest.json">
-    
-    <!-- Critical CSS (Inline) -->
-    <style>
-        /* Critical CSS - Above the fold styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
 
-        :root {
-            --primary-color: #1e40af;
-            --primary-hover: #1d4ed8;
-            --accent-color: #dc2626;
-            --text-primary: #111827;
-            --text-secondary: #374151;
-            --text-muted: #6b7280;
-            --text-inverse: #ffffff;
-            --bg-primary: #ffffff;
-            --bg-secondary: #f9fafb;
-            --bg-accent: #f3f4f6;
-            --bg-gradient: linear-gradient(135deg, #1e293b 0%, #334155 30%, #64748b 100%);
-            --border-color: #d1d5db;
-            --border-dark: #9ca3af;
-        }
+    <!-- テーマの早期適用（フラッシュ防止） -->
+    <script>
+        (function () {
+            try {
+                var t = localStorage.getItem('theme');
+                if (t !== 'light' && t !== 'dark') {
+                    t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+                }
+                document.documentElement.setAttribute('data-theme', t);
+            } catch (e) {}
+        })();
+    </script>
 
-        [data-theme="dark"] {
-            --primary-color: #3b82f6;
-            --primary-hover: #2563eb;
-            --accent-color: #ef4444;
-            --text-primary: #f9fafb;
-            --text-secondary: #d1d5db;
-            --text-muted: #9ca3af;
-            --text-inverse: #111827;
-            --bg-primary: #111827;
-            --bg-secondary: #1f2937;
-            --bg-accent: #374151;
-            --border-color: #374151;
-            --border-dark: #4b5563;
-        }
-
-        body {
-            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.6;
-            min-height: 100vh;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            min-height: calc(100vh - 60px);
-            padding: 30px 0;
-        }
-
-        .header {
-            background: var(--bg-primary);
-            padding: 20px;
-            border-bottom: 2px solid var(--border-color);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: var(--primary-color);
-        }
-
-        .theme-toggle {
-            background: var(--bg-secondary);
-            border: 2px solid var(--border-color);
-            color: var(--text-primary);
-            padding: 8px 12px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .main-content {
-            padding: 20px;
-        }
-
-        .welcome-section {
-            text-align: center;
-            padding: 30px;
-            background: var(--bg-gradient);
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            margin-bottom: 30px;
-            color: var(--text-inverse);
-        }
-
-        .welcome-card {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .welcome-icon {
-            margin-bottom: 20px;
-        }
-
-        .welcome-icon i {
-            font-size: 2rem;
-            color: var(--text-inverse);
-        }
-
-        .skip-link {
-            position: absolute;
-            top: -40px;
-            left: 6px;
-            background: var(--primary-color);
-            color: var(--text-inverse);
-            padding: 8px;
-            text-decoration: none;
-            z-index: 10000;
-            border-radius: 4px;
-            font-weight: 600;
-        }
-
-        .skip-link:focus {
-            top: 6px;
-        }
-
-        /* Mobile optimizations */
-        @media (max-width: 768px) {
-            .container {
-                padding: 10px 0;
-            }
-            
-            .header {
-                padding: 15px;
-            }
-            
-            .header-content {
-                padding: 0 10px;
-            }
-            
-            .logo {
-                font-size: 1.2rem;
-                gap: 8px;
-            }
-            
-            .welcome-section {
-                padding: 20px;
-                margin-bottom: 20px;
-            }
-        }
-    </style>
-    
-    <!-- Main CSS (Deferred loading) -->
-    <link rel="preload" href="styles.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="styles.css"></noscript>
-    
-    <!-- 外部フォント（非同期読み込み） -->
-    <!-- Resource Hints for Performance -->
+    <!-- フォント（非同期） -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
-    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=optional" 
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap"
           rel="stylesheet" media="print" onload="this.media='all'">
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=optional" rel="stylesheet"></noscript>
-    
-    <!-- 外部アイコン（最適化済み） -->
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet"></noscript>
+
+    <!-- アイコン（非同期） -->
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
-    <!-- Font Awesome woff2 直接プリロード -->
-    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/webfonts/fa-solid-900.woff2" 
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/webfonts/fa-solid-900.woff2"
           as="font" type="font/woff2" crossorigin="anonymous">
-    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/webfonts/fa-regular-400.woff2" 
-          as="font" type="font/woff2" crossorigin="anonymous">
-    <link rel="stylesheet" 
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" 
-          crossorigin="anonymous" 
-          media="print" 
-          onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" crossorigin="anonymous"></noscript>
-    
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+          crossorigin="anonymous" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous"></noscript>
+
+    <link rel="stylesheet" href="styles.css">
+
     <!-- Structured Data (JSON-LD) -->
     <script type="application/ld+json">
     {
@@ -261,360 +90,38 @@
         "applicationCategory": ["UtilityApplication", "GameApplication"],
         "operatingSystem": "Web Browser",
         "browserRequirements": "Requires JavaScript ES6+, HTML5, CSS3",
-        "memoryRequirements": "512MB RAM",
-        "storageRequirements": "10MB",
-        "permissions": "storage",
-        "offers": {
-            "@type": "Offer",
-            "price": "0",
-            "priceCurrency": "JPY",
-            "availability": "https://schema.org/InStock"
-        },
-        "featureList": [
-            "レシピ管理",
-            "材料計算",
-            "階層構造での材料展開",
-            "JSONインポート・エクスポート",
-            "ダークテーマ対応",
-            "黒い砂漠レシピ対応",
-            "ゲームアイテム制作管理",
-            "PWA対応",
-            "オフライン機能"
-        ],
-        "author": {
-            "@type": "Person",
-            "name": "NimaProgram",
-            "url": "https://github.com/NimaProgram"
-        },
-        "creator": {
-            "@type": "Person", 
-            "name": "NimaProgram"
-        },
-        "dateCreated": "2025-10-10",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY", "availability": "https://schema.org/InStock" },
+        "featureList": ["レシピ管理", "材料計算", "階層構造での材料展開", "JSONインポート・エクスポート", "ダークテーマ対応", "黒い砂漠レシピ対応", "PWA対応", "オフライン機能"],
+        "author": { "@type": "Person", "name": "NimaProgram", "url": "https://github.com/NimaProgram" },
         "dateModified": "2025-10-10",
-        "datePublished": "2025-10-10",
         "inLanguage": "ja",
-        "keywords": ["黒い砂漠", "材料計算", "レシピ管理", "MMORPG", "アプリ", "料理レシピ"],
-        "audience": {
-            "@type": "Audience",
-            "audienceType": ["ゲーマー", "料理愛好家", "効率化を求める人"]
-        }
+        "keywords": ["黒い砂漠", "材料計算", "レシピ管理", "MMORPG", "アプリ", "料理レシピ"]
     }
     </script>
 </head>
-<body data-theme="dark">
-    <!-- MFI: アクセシビリティ向上（スキップリンク） -->
-    <a href="#main-content" class="skip-link">メインコンテンツにスキップ</a>
-    
-    <div class="container" id="main-content" role="main">
-        <!-- Header -->
-        <header class="header" role="banner">
-            <div class="header-content">
-                <h1 class="logo">
-                    <i class="fas fa-archive" aria-hidden="true"></i>
-                    <span>RecipeBox - レシピ管理システム</span>
-                </h1>
-                <button class="theme-toggle" id="themeToggle" 
-                        title="ライトテーマに切り替える" 
-                        aria-label="テーマを切り替える"
-                        role="button">
-                    <i class="fas fa-moon" id="themeIcon" aria-hidden="true"></i>
-                </button>
+<body>
+    <a href="#app" class="skip-link">メインコンテンツにスキップ</a>
+
+    <header class="app-header" role="banner">
+        <div class="app-header-inner">
+            <div class="brand">
+                <span class="brand-mark"><i class="fas fa-box-archive" aria-hidden="true"></i></span>
+                <span class="brand-name">RecipeBox</span>
             </div>
-        </header>
-
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- ウェルカムセクション -->
-            <section class="welcome-section" id="welcomeSection">
-                <div class="welcome-card">
-                    <div class="welcome-icon">
-                        <i class="fas fa-utensils"></i>
-                    </div>
-                    <h2>レシピ管理システムへようこそ！</h2>
-                    <p class="welcome-description">
-                        複雑なレシピと材料の依存関係を効率的に管理できるツールです。<br>
-                        黒い砂漠の料理レシピやアイテム制作、100個以上のレシピにも対応し、材料の自動計算が可能です。
-                    </p>
-                    
-                    <!-- 機能紹介 -->
-                    <div class="feature-highlights">
-                        <h3>主な機能</h3>
-                        <ul class="feature-list">
-                            <li><i class="fas fa-calculator"></i> 自動材料計算 - 必要な材料を瞬時に算出</li>
-                            <li><i class="fas fa-sitemap"></i> 階層レシピ - 複雑な依存関係も簡単管理</li>
-                            <li><i class="fas fa-gamepad"></i> ゲーム対応 - 黒い砂漠のアイテム制作に最適</li>
-                            <li><i class="fas fa-download"></i> データ保存 - JSONで簡単バックアップ・復元</li>
-                            <li><i class="fas fa-moon"></i> ダークテーマ - 目に優しい表示モード対応</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="welcome-actions">
-                        <button class="welcome-btn primary" onclick="showRecipeManager()">
-                            <i class="fas fa-plus"></i> 最初のレシピを作成
-                        </button>
-                        <button class="welcome-btn secondary" id="welcomeImportBtn">
-                            <i class="fas fa-upload"></i> レシピをインポート
-                        </button>
-                    </div>
-                </div>
-            </section>
-
-
-
-            <!-- Recipe Management -->
-            <section class="recipe-management-section" style="display: none;">
-                <div class="section-header">
-                    <h2><i class="fas fa-database"></i> レシピ管理</h2>
-                    <div class="recipe-search-bar">
-                        <input type="text" id="quickSearch" placeholder="レシピを検索..." onkeyup="quickSearchRecipes()">
-                        <button class="search-btn" onclick="showRecipeList()">
-                            <i class="fas fa-search"></i>
-                        </button>
-                    </div>
-                    <div class="management-buttons">
-                        <button class="management-btn primary" onclick="showRecipeManager()">
-                            <i class="fas fa-plus"></i> レシピ追加
-                        </button>
-                        <button class="management-btn secondary" onclick="showRecipeList()">
-                            <i class="fas fa-list"></i> レシピ一覧
-                        </button>
-                        <button class="management-btn secondary" id="exportBtn">
-                            <i class="fas fa-download"></i> エクスポート
-                        </button>
-                        <button class="management-btn secondary" id="importBtn">
-                            <i class="fas fa-upload"></i> インポート
-                        </button>
-                        <button class="management-btn tertiary" onclick="showBackupList()">
-                            <i class="fas fa-history"></i> バックアップ
-                        </button>
-                        <button class="management-btn danger" onclick="clearAllLocalStorage()">
-                            <i class="fas fa-trash-alt"></i> 全データ削除
-                        </button>
-                    </div>
-                </div>
-                <div class="recipe-card recipe-management-card">
-                    <div class="recipe-selector-section">
-                        <h3><i class="fas fa-utensils"></i> レシピ選択</h3>
-                        <div class="recipe-selector">
-                            <label for="selectedRecipe">計算対象のレシピ:</label>
-                            <select id="selectedRecipe" onchange="onRecipeSelected()">
-                                <option value="">レシピを選択してください</option>
-                            </select>
-                        </div>
-                        <div class="recipe-tree-container" id="recipeTreeContainer" style="display: none;">
-                            <h3 class="recipe-tree-title"><i class="fas fa-sitemap"></i> レシピ構成ツリー</h3>
-                            <div class="recipe-tree" id="recipeTree">
-                                <!-- ツリー構造がここに表示されます -->
-                            </div>
-                        </div>
-                        
-                        <!-- 小画面用独立レシピリストコンテナ -->
-                        <div class="recipe-list-container" id="recipeListContainer" style="display: none;">
-                            <div id="recipeList">
-                                <!-- リスト形式の材料がここに表示されます -->
-                            </div>
-                        </div>
-                    </div>
-                    <div class="recipe-stats">
-                        <div class="stat-item">
-                            <span class="stat-label">登録レシピ数</span>
-                            <span class="stat-value" id="recipeCount">0</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-label">基本材料数</span>
-                            <span class="stat-value" id="basicItemCount">0</span>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Material Calculator -->
-            <section class="calculator-section" style="display: none;">
-                <div class="section-header">
-                    <h2><i class="fas fa-calculator"></i> 材料計算機</h2>
-                </div>
-                <div class="calculator-card">
-                    <div class="calculator-input">
-                        <label for="quantity">作りたい個数:</label>
-                        <input type="number" id="quantity" value="100" min="1" max="1000">
-                        <button onclick="calculateMaterialsNew()">計算</button>
-                    </div>
-                    <div class="calculation-result" id="calculationResult">
-                        <!-- 計算結果がここに表示されます -->
-                    </div>
-                </div>
-            </section>
-        </main>
-
-        <!-- Footer -->
-        <footer class="footer">
-                        <p>© 2025 RecipeBox. All rights reserved.</p>
-        </footer>
-    </div>
-
-    <!-- Recipe Manager Modal -->
-    <div id="recipeManagerModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="modalTitle">レシピ追加</h3>
-                <span class="close" onclick="closeRecipeManager()">&times;</span>
-            </div>
-            <div class="modal-body">
-                <form id="recipeForm" role="form" aria-labelledby="modalTitle">
-                    <div class="form-group">
-                        <label for="recipeName">レシピ名:</label>
-                        <input type="text" id="recipeName" required 
-                               aria-describedby="recipeNameHelp"
-                               aria-required="true">
-                        <small id="recipeNameHelp" class="form-help">レシピの名前を入力してください</small>
-                    </div>
-                    <div class="form-group">
-                        <label for="baseQuantity">基本作成数:</label>
-                        <input type="number" id="baseQuantity" value="1" min="1" 
-                               aria-describedby="quantityHelp">
-                        <small id="quantityHelp" class="form-help">一度に作成する数量を指定してください</small>
-                    </div>
-                    <div class="form-group">
-                        <label for="recipeIcon">アイコン:</label>
-                        <select id="recipeIcon" aria-describedby="iconHelp">
-                            <option value="fa-utensils">デフォルト</option>
-                            <option value="fa-cheese">チーズ</option>
-                            <option value="fa-bread-slice">パン</option>
-                            <option value="fa-egg">卵</option>
-                            <option value="fa-glass-water">液体</option>
-                            <option value="fa-ice-cream">クリーム</option>
-                            <option value="fa-butter">バター</option>
-                            <option value="fa-cube">固体</option>
-                            <option value="fa-flask">薬品</option>
-                            <option value="fa-fire">調理</option>
-                        </select>
-                        <small id="iconHelp" class="form-help">レシピに表示するアイコンを選択してください</small>
-                    </div>
-
-                    <div class="form-group">
-                        <label>材料:</label>
-                        <div id="ingredientsList">
-                            <!-- 材料リストがここに表示されます -->
-                        </div>
-                        <button type="button" onclick="addIngredient()" class="add-ingredient-btn">
-                            <i class="fas fa-plus"></i> 材料追加
-                        </button>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" onclick="closeRecipeManager()" class="cancel-btn">キャンセル</button>
-                <button type="button" onclick="saveRecipe()" class="save-btn">保存</button>
-            </div>
+            <button class="theme-toggle" id="themeToggle" type="button" aria-label="テーマを切り替える" title="テーマを切り替える">
+                <i class="fas fa-moon" aria-hidden="true"></i>
+            </button>
         </div>
-    </div>
+    </header>
 
-    <!-- Recipe List Modal -->
-    <div id="recipeListModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>レシピ一覧</h3>
-                <span class="close" onclick="closeRecipeList()">&times;</span>
-            </div>
-            <div class="modal-body">
-                <div class="recipe-filter">
-                    <input type="text" id="recipeSearch" placeholder="レシピを検索..." onkeyup="filterRecipes()">
-                    <select id="recipeTypeFilter" onchange="filterRecipes()">
-                        <option value="all">全て</option>
-                        <option value="basic">基本材料</option>
-                        <option value="recipe">レシピ</option>
-                    </select>
-                </div>
-                <div id="recipeListContent">
-                    <!-- レシピリストがここに表示されます -->
-                </div>
-            </div>
-        </div>
-    </div>
+    <main class="app-main" id="app" role="main">
+        <!-- 画面は js/app.js が描画します -->
+    </main>
 
-    <!-- Add Ingredient Modal -->
-    <div id="addIngredientModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>新しい材料を追加</h3>
-                <span class="close" onclick="closeAddIngredientModal()">&times;</span>
-            </div>
-            <div class="modal-body">
-                <form id="addIngredientForm">
-                    <div class="form-group">
-                        <label for="newIngredientName">材料名:</label>
-                        <input type="text" id="newIngredientName" required placeholder="例: トマト, 小麦粉, 砂糖">
-                    </div>
-                    <div class="form-group">
-                        <label for="newIngredientIcon">アイコン:</label>
-                        <select id="newIngredientIcon">
-                            <option value="fa-utensils">🍴 基本</option>
-                            <option value="fa-egg">🥚 卵</option>
-                            <option value="fa-glass-water">🥛 液体</option>
-                            <option value="fa-bread-slice">🍞 パン/生地</option>
-                            <option value="fa-cheese">🧀 チーズ</option>
-                            <option value="fa-butter">🧈 バター</option>
-                            <option value="fa-ice-cream">🍦 クリーム</option>
-                            <option value="fa-salt-shaker">🧂 調味料</option>
-                            <option value="fa-cube">⬜ 粉/固形</option>
-                            <option value="fa-fish">🐟 魚</option>
-                            <option value="fa-drumstick-bite">🍗 肉</option>
-                            <option value="fa-carrot">🥕 野菜</option>
-                            <option value="fa-apple-alt">🍎 果物</option>
-                        </select>
-                    </div>
+    <footer class="app-footer">
+        <p>© 2025 RecipeBox</p>
+    </footer>
 
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" onclick="closeAddIngredientModal()" class="cancel-btn">キャンセル</button>
-                <button type="button" onclick="saveNewIngredient()" class="save-btn">追加</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Hidden file input for import -->
-    <input type="file" id="fileInput" accept=".json" style="display: none;" onchange="handleFileImport(event)">
-
-    <!-- Critical JavaScript files (for initial render) -->
-    <script src="js/theme-manager.js"></script>
-    
-    <!-- Core JavaScript files (deferred but high priority) -->
-    <script src="js/database.js" defer></script>
-    <script src="js/custom-dropdown.js" defer></script>
-    <script src="js/dropdown-integration.js" defer></script>
-    
-    <!-- Non-critical JavaScript files (deferred) -->
-    <script src="js/recipe-manager.js" defer></script>
-    <script src="js/ui-manager.js" defer></script>
-    <script src="js/inventory-manager.js" defer></script>
-    <script src="js/file-manager.js" defer></script>
-    <script src="script.js" defer></script>
-    
-    <!-- PWA Service Worker -->
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function() {
-                // GitHub Pagesの相対パス対応
-                const swPath = './sw.js';
-                navigator.serviceWorker.register(swPath)
-                    .then(function(registration) {
-                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
-                    })
-                    .catch(function(err) {
-                        console.log('ServiceWorker registration failed: ', err);
-                        // フォールバック: 別のパスでリトライ
-                        navigator.serviceWorker.register('sw.js')
-                            .then(function(registration) {
-                                console.log('ServiceWorker registration successful on retry with scope: ', registration.scope);
-                            })
-                            .catch(function(retryErr) {
-                                console.log('ServiceWorker registration retry also failed: ', retryErr);
-                            });
-                    });
-            });
-        }
-    </script>
+    <script type="module" src="js/app.js"></script>
 </body>
 </html>
