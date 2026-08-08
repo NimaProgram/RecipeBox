@@ -25,9 +25,6 @@ export function el(tag, props = {}, children = []) {
             Object.assign(node.style, value);
         } else if (key.startsWith('on') && typeof value === 'function') {
             node.addEventListener(key.slice(2).toLowerCase(), value);
-        } else if (key === 'html') {
-            // 明示的に信頼できる静的 HTML のみ（アイコン用など）。外部入力には使わない。
-            node.innerHTML = value;
         } else if (key in node && key !== 'list') {
             try { node[key] = value; } catch { node.setAttribute(key, value); }
         } else {

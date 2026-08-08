@@ -2,13 +2,16 @@
 // - HTML: network-first（更新をすぐ反映、オフライン時はキャッシュ）
 // - その他: cache-first（高速表示）
 
-const CACHE_NAME = 'recipebox-v2.0.1';
+const CACHE_NAME = 'recipebox-v2.1.0';
 const CORE_ASSETS = [
     './',
     './index.html',
     './styles.css',
     './favicon.svg',
     './manifest.json',
+    './assets/fontawesome/css/fontawesome.min.css',
+    './assets/fontawesome/css/solid.min.css',
+    './assets/fontawesome/webfonts/fa-solid-900.woff2',
     './js/app.js',
     './js/store.js',
     './js/recipe-logic.js',
