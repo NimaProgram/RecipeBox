@@ -1,142 +1,67 @@
-# レシピ管理システム - AI エージェント向け開発ガイド
+# RecipeBox - AI エージェント向け開発ガイド
 
-## プロジェクト概要
-複雑なレシピと材料の依存関係を管理するウェブアプリケーション。基本材料から複雑なレシピまで、階層構造での材料計算を提供。
+複雑なレシピと材料の依存関係を管理するビルドレスな Web アプリ（PWA）。
+基本材料から複雑なレシピまで、階層構造での材料計算を提供する。
 
-## アーキテクチャの理解
+## アーキテクチャ（ES Modules）
 
-### コアコンポーネント
-- **RecipeDatabase** (`js/database.js`): データモデルとビジネスロジック
-- **UI管理** (`js/ui-manager.js`): 表示状態制御とイベント処理
-- **テーマ管理** (`js/theme-manager.js`): ライト/ダークテーマ切り替え
-- **カスタムドロップダウン** (`js/custom-dropdown.js` + `js/dropdown-integration.js`): select要素の完全置換
-- **ファイル管理** (`js/file-manager.js`): JSON インポート/エクスポート、自動バックアップ
+ビルド不要。`index.html`（薄いシェル）→ `js/app.js`（エントリ）が
+中央状態ストアを購読して画面を描画する。
 
-### データ構造パターン
-```javascript
-// レシピは Map<string, Recipe> で管理
-{
-  name: "チーズパイ",
-  type: "recipe", // または "basic"
-  baseQuantity: 1,
-  ingredients: { "チーズ": 7, "卵": 3 }, // 材料名: 必要量
-  icon: "fa-utensils"
-}
+### コアモジュール
+- **Store** (`js/store.js`): 状態（recipes / inventory）と pub/sub、mutation。
+- **ロジック** (`js/recipe-logic.js`): `expandIngredients` / `getDependencies` /
+  `getDependents` / `wouldCreateCycle`（純粋関数、副作用なし）。
+- **スキーマ** (`js/schema.js`): `migrate()`（v1→v2）/ `normalize` / `buildExport`。
+- **永続化** (`js/persistence.js`): localStorage・自動バックアップ・入出力。
+- **UI 基盤**: `js/dom.js`（`el()` で安全に DOM 生成）、`js/dialogs.js`
+  （modal/confirm/prompt/toast）、`js/combobox.js`（コンボボックス）、`js/theme.js`。
+- **画面** (`js/views/*`): welcome / tree / materials / recipeForm / recipeList。
+
+### データモデル
+```js
+{ name, type: "basic"|"recipe", baseQuantity, ingredients: { 名前: 量 }, icon, description, category }
 ```
+recipes は「名前キー」の `Map` で保持。
 
 ## 重要な設計原則
 
-### 1. 再帰的材料展開システム
-- `expandIngredients()` メソッドは循環参照検出付きで基本材料まで展開
-- 必須: `visited` Set を使用した循環参照チェック実装
+### 1. 状態は Store 経由でのみ変更する
+- 読み取り: `store.getRecipe(name)` / `getAllRecipes()` / `getRecipesWithIngredients()` / `expand()` など。
+- 変更: `upsertRecipe()` / `deleteNode()` / `renameNode()` / `setInventory()`。
+- 変更後は `store.emit()` が購読者へ通知（mutation 内で自動）。UI 側は `store.subscribe()` で再描画。
+- 高頻度更新（在庫入力など）は `setInventory(name, q, { silent: true })` + デバウンス保存で全体再描画を避ける。
 
-### 2. カスタムドロップダウンの統合
-- **既存の select 要素は自動的にカスタムドロップダウンに変換される**
-- DOM操作時: `getSelectValue()` / `setSelectValue()` ヘルパー関数を使用
-- 新しい select 要素追加時は自動検出・変換される
+### 2. 改名は renameNode を使う（参照破綻を防ぐ）
+- レシピ/材料の名前変更は必ず `store.renameNode(old, new)`。全材料参照と在庫キーを自動移設する。
 
-### 3. UI状態管理
-- `updateAllUI()` が全体の整合性を保つ - データ変更後は必ず呼び出す
-- `isEmpty()` により表示状態（ウェルカム画面 vs メインUI）を制御
+### 3. 再帰的材料展開と循環参照
+- `expandIngredients()` は基本材料まで展開し、各段で `Math.ceil` 切り上げ、`visited` Set で循環を検出。
+- レシピフォームでは `store.wouldCycle(recipeName, ingredient)` で循環を事前に拒否する。
 
-## 開発時のパターン
+### 4. DOM は安全に生成する（XSS 対策）
+- `innerHTML` 文字列連結は使わない。`el(tag, props, children)` と `textContent` で組み立てる。
+- 外部/ユーザー入力を HTML として挿入しない。アイコン等の静的構造のみ `icon()` を使う。
 
-### DOM要素の値取得/設定
-```javascript
-// ❌ 直接的な操作（カスタムドロップダウンで動作しない）
-document.getElementById('selectedRecipe').value = 'recipe1';
+### 5. ダイアログ / 通知
+- `prompt`/`alert`/`confirm` は使わない。`dialogs.js` の
+  `openModal` / `confirmDialog` / `promptDialog` / `notify` を使う。
 
-// ✅ 統一ヘルパー関数を使用
-setSelectValue('selectedRecipe', 'recipe1');
-const value = getSelectValue('selectedRecipe');
-```
+## 下位互換（重要）
+- localStorage key は `recipeDatabase`（バックアップ `recipeBackup_*`）を維持。
+- 読み込み・インポートは必ず `schema.migrate()` を通す（`store.load()` が内包）。
+- 保存形式を変える場合は `CURRENT_SCHEMA` を上げ、`migrate()` に変換段を追加する。
 
-### レシピ操作の基本フロー
-1. レシピデータ変更
-2. `updateAllUI()` 呼び出し
-3. `saveAllToLocalStorage()` で永続化（通常は updateAllUI 内で自動実行）
+## CSS（デザインシステム）
+- `styles.css` はトークン（`:root` と `:root[data-theme="dark"]`）→ base → components の順。
+- 色・間隔・角丸・影・タイポはすべて CSS 変数。新規コンポーネントも変数を使う。
+- レスポンシブ: 860px でワークスペースを1カラム、560px 以下でモバイル最適化。
 
-### エラーハンドリング
-- `showNotification(message, type)` でユーザーフィードバック
-- console.error でデバッグ情報出力
-- try-catch で例外処理、特に JSON パース時
+## PWA
+- `sw.js`: HTML は network-first、その他資産は cache-first。
+- 資産を追加/リネームしたら `CORE_ASSETS` と `CACHE_NAME` を更新する。
 
-## CSS設計原則
-
-### テーマシステム
-- CSS カスタムプロパティ（`--primary-color` など）でテーマ管理
-- `[data-theme="dark"]` セレクターでダークテーマ対応
-- **select要素のスタイルは特に複雑** - 既存のカスタムプロパティを利用
-
-### レスポンシブ設計
-- モバイル: 768px 以下でレイアウト変更
-- グリッドは `auto-fit` + `minmax()` パターン使用
-
-## ファイル構成とモジュール依存関係
-
-### 読み込み順序（重要）
-```html
-<!-- 1. テーマ管理 -->
-<script src="js/theme-manager.js"></script>
-<!-- 2. カスタムコンポーネント -->
-<script src="js/custom-dropdown.js"></script>
-<script src="js/dropdown-integration.js"></script>
-<!-- 3. データ層 -->
-<script src="js/database.js"></script>
-<!-- 4. 機能層 -->
-<script src="js/recipe-manager.js"></script>
-<script src="js/ui-manager.js"></script>
-<script src="js/inventory-manager.js"></script>
-<script src="js/file-manager.js"></script>
-<!-- 5. メインスクリプト -->
-<script src="script.js"></script>
-```
-
-### グローバル変数
-- `recipeDB`: RecipeDatabase インスタンス（メイン）
-- `dropdownIntegration`: カスタムドロップダウン管理
-- `themeManager`: テーマ切り替え管理
-
-## よくある実装パターン
-
-### 新しいモーダル追加
-1. HTML に `modal` クラスで基本構造作成
-2. `closeModalWithAnimation()` 使用でアニメーション付き閉じる処理
-3. z-index: モーダル間の重なり制御（既存値を参考に）
-
-### 材料/レシピ選択UI追加
-- 自動的にカスタムドロップダウンに変換される
-- `updateAllIngredientSelects()` で一括更新
-- 新規追加機能は `enableAddNew()` で自動統合
-
-### データ永続化
-- LocalStorage への自動保存あり（5分間隔 + beforeunload）
-- `createAutoBackup()` で自動バックアップ（最新5個保持）
-
-## パフォーマンス考慮事項
-
-### 大量データ対応
-- レシピ100個以上でも動作するよう設計済み
-- 仮想化: `updateRecipeListDisplay()` でグリッド表示最適化
-- デバウンス: 検索・入力処理で使用
-
-### メモリ管理
-- カスタムドロップダウンは DOM 削除時に自動クリーンアップ
-- Map データ構造でキー検索最適化
-
-## デバッグとトラブルシューティング
-
-### よくある問題
-1. **select要素の値が取得できない** → `getSelectValue()` 使用確認
-2. **レシピ追加後にUIが更新されない** → `updateAllUI()` 呼び出し確認
-3. **カスタムドロップダウンが機能しない** → `dropdownIntegration` 初期化確認
-
-### デバッグ用のコンソールコマンド
-```javascript
-// データベース状態確認
-console.log(recipeDB.getAllRecipes());
-// ドロップダウン状態確認
-console.log(dropdownIntegration.dropdowns);
-```
-
-このシステムは複雑な材料依存関係と動的UI更新を中心に設計されています。既存パターンに従った開発を心がけてください。
+## よくある作業
+- **画面部品を追加**: `js/views/` に要素を返す関数を作り、`app.js` から組み込む。
+- **モーダルを追加**: `openModal({ title, body, actions })` を使う（独自 DOM を作らない）。
+- **選択 UI を追加**: `createCombobox({ options, searchable, allowAdd, onSelect, onAdd })`。

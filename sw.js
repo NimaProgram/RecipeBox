@@ -1,88 +1,78 @@
-const CACHE_NAME = 'recipebox-v1.1.0-mfi';
-const urlsToCache = [
+// RecipeBox Service Worker
+// - HTML: network-first（更新をすぐ反映、オフライン時はキャッシュ）
+// - その他: cache-first（高速表示）
+
+const CACHE_NAME = 'recipebox-v2.0.0';
+const CORE_ASSETS = [
     './',
     './index.html',
     './styles.css',
-    './script.js',
     './favicon.svg',
     './manifest.json',
-    './js/theme-manager.js',
-    './js/custom-dropdown.js',
-    './js/dropdown-integration.js',
-    './js/database.js',
-    './js/recipe-manager.js',
-    './js/ui-manager.js',
-    './js/inventory-manager.js',
-    './js/file-manager.js'
+    './js/app.js',
+    './js/store.js',
+    './js/recipe-logic.js',
+    './js/schema.js',
+    './js/persistence.js',
+    './js/theme.js',
+    './js/dom.js',
+    './js/dialogs.js',
+    './js/combobox.js',
+    './js/icons.js',
+    './js/views/welcome.js',
+    './js/views/tree.js',
+    './js/views/materials.js',
+    './js/views/recipeForm.js',
+    './js/views/recipeList.js',
 ];
 
-// MFI対応: より高速なキャッシュ戦略
-self.addEventListener('install', function(event) {
+self.addEventListener('install', (event) => {
     event.waitUntil(
-        caches.open(CACHE_NAME)
-            .then(function(cache) {
-                console.log('RecipeBox: Cache opened for MFI');
-                return cache.addAll(urlsToCache);
-            })
+        caches.open(CACHE_NAME).then((cache) => cache.addAll(CORE_ASSETS))
     );
-    // 即座にアクティブ化
     self.skipWaiting();
 });
 
-self.addEventListener('activate', function(event) {
+self.addEventListener('activate', (event) => {
     event.waitUntil(
-        caches.keys().then(function(cacheNames) {
-            return Promise.all(
-                cacheNames.map(function(cacheName) {
-                    if (cacheName !== CACHE_NAME) {
-                        console.log('RecipeBox: Deleting old cache:', cacheName);
-                        return caches.delete(cacheName);
-                    }
-                })
-            );
-        })
+        caches.keys().then((names) =>
+            Promise.all(names.filter((n) => n !== CACHE_NAME).map((n) => caches.delete(n)))
+        )
     );
-    // 即座にコントロール開始
     self.clients.claim();
 });
 
-self.addEventListener('fetch', function(event) {
-    // MFI対応: モバイルに最適化されたキャッシュ戦略
-    event.respondWith(
-        caches.match(event.request)
-            .then(function(response) {
-                // キャッシュヒット - レスポンス返却
-                if (response) {
+self.addEventListener('fetch', (event) => {
+    const { request } = event;
+    if (request.method !== 'GET') return;
+
+    const isDocument = request.mode === 'navigate' || request.destination === 'document';
+
+    if (isDocument) {
+        // network-first
+        event.respondWith(
+            fetch(request)
+                .then((response) => {
+                    const copy = response.clone();
+                    caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
                     return response;
+                })
+                .catch(() => caches.match(request).then((r) => r || caches.match('./index.html')))
+        );
+        return;
+    }
+
+    // cache-first（成功したGETのみキャッシュ）
+    event.respondWith(
+        caches.match(request).then((cached) => {
+            if (cached) return cached;
+            return fetch(request).then((response) => {
+                if (response && response.status === 200 && response.type === 'basic') {
+                    const copy = response.clone();
+                    caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
                 }
-                
-                // クローンしてフェッチ
-                var fetchRequest = event.request.clone();
-                
-                return fetch(fetchRequest).then(
-                    function(response) {
-                        // 無効なレスポンスかチェック
-                        if(!response || response.status !== 200 || response.type !== 'basic') {
-                            return response;
-                        }
-                        
-                        // レスポンスをクローンしてキャッシュ
-                        var responseToCache = response.clone();
-                        
-                        caches.open(CACHE_NAME)
-                            .then(function(cache) {
-                                cache.put(event.request, responseToCache);
-                            });
-                        
-                        return response;
-                    }
-                ).catch(function() {
-                    // オフライン時のフォールバック
-                    if (event.request.destination === 'document') {
-                        return caches.match('/index.html');
-                    }
-                });
-            }
-        )
+                return response;
+            }).catch(() => cached);
+        })
     );
 });
