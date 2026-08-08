@@ -112,6 +112,26 @@ export function createCombobox(config = {}) {
         });
     }
 
+    // ポップオーバーを fixed で配置する（祖先の overflow に切り取られない）。
+    // 下に入りきらない場合は上方向へ反転する。
+    function reposition() {
+        const r = button.getBoundingClientRect();
+        const gap = 6, margin = 8, maxH = 320;
+        const below = window.innerHeight - r.bottom;
+        const above = r.top;
+        popover.style.left = `${r.left}px`;
+        popover.style.width = `${r.width}px`;
+        if (below < 220 && above > below) {
+            popover.style.top = 'auto';
+            popover.style.bottom = `${window.innerHeight - r.top + gap}px`;
+            popover.style.maxHeight = `${Math.max(140, Math.min(maxH, above - gap - margin))}px`;
+        } else {
+            popover.style.bottom = 'auto';
+            popover.style.top = `${r.bottom + gap}px`;
+            popover.style.maxHeight = `${Math.max(140, Math.min(maxH, below - gap - margin))}px`;
+        }
+    }
+
     // --- 開閉 -------------------------------------------------------------
     function openMenu() {
         if (open) return;
@@ -120,6 +140,7 @@ export function createCombobox(config = {}) {
         button.setAttribute('aria-expanded', 'true');
         activeIndex = visibleOptions().findIndex(({ opt }) => opt.value === value);
         renderList();
+        reposition();
         if (searchInput) {
             searchInput.value = '';
             renderList();
@@ -128,6 +149,9 @@ export function createCombobox(config = {}) {
             setTimeout(() => listbox.focus(), 0);
         }
         document.addEventListener('click', onDocClick, true);
+        // スクロール/リサイズで追従（capture でモーダル内スクロールも捕捉）
+        window.addEventListener('scroll', reposition, true);
+        window.addEventListener('resize', reposition);
     }
 
     function close() {
@@ -137,6 +161,8 @@ export function createCombobox(config = {}) {
         button.setAttribute('aria-expanded', 'false');
         activeIndex = -1;
         document.removeEventListener('click', onDocClick, true);
+        window.removeEventListener('scroll', reposition, true);
+        window.removeEventListener('resize', reposition);
     }
 
     function toggle() { open ? close() : openMenu(); }
