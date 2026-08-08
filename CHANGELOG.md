@@ -36,13 +36,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed - 全面リファクタリング + デザイン刷新
+- 🏗️ アーキテクチャを ES Modules 構成へ再設計（グローバル関数の集合を廃止し、中央状態ストア `Store` + pub/sub へ）
+- 🎨 デザインシステムを刷新（CSS をトークンベースで再構築、クリーンで余白の効いた UI・ライト/ダーク両対応）
+- 🧩 脆弱なカスタムドロップダウン層（偽 select / MutationObserver / setTimeout 競合）を単一のアクセシブルなコンボボックスに置換
+- 💾 保存形式に `schemaVersion` を導入し、旧データ（v1）を自動アップグレードするマイグレーション層を追加（下位互換）
+- ✏️ レシピ改名を「改名カスケード」化（全材料参照・在庫キーを自動移設し参照破綻を解消）
+- 🧮 計算結果と在庫（have/need）を1画面に統合、充足プログレス表示を追加
+- 💬 `prompt()`/`alert()`/`confirm()` をアプリ内ダイアログ・トーストへ置換
+
+### Fixed
+- 🐛 存在しないメソッド参照（`setCurrentMainRecipe` 等）によるレシピ選択・削除・編集の破綻
+- 🐛 バックアップ書き出し時にオブジェクトをそのまま `Blob` 化していた不具合（`[object Object]`）
+- 🔒 レシピ名を `innerHTML` へ直挿ししていた XSS リスク（DOM 生成 + エスケープで根絶）
+
 ### Planned Features
-- レシピ検索機能
 - カテゴリ別分類
 - レシピ共有機能
 - 材料価格計算
 - 多言語対応
-- データベース連携
 
 ---
 

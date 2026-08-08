@@ -73,23 +73,30 @@ RecipeBoxは、黒い砂漠やMMORPGのアイテム制作レシピにも対応�
 
 ```
 RecipeBox/
-├── index.html              # メインHTML
-├── styles.css              # メインスタイルシート
-├── script.js               # メインJavaScript
+├── index.html              # アプリシェル（ヘッダー + #app）
+├── styles.css              # デザインシステム（トークンベース）
 ├── manifest.json           # PWAマニフェスト
 ├── sw.js                   # Service Worker
 ├── sitemap.xml             # SEO用サイトマップ
 ├── robots.txt              # クローラー制御
 ├── favicon.svg             # アイコン
-├── js/                     # JavaScriptモジュール
-│   ├── database.js         # データベース管理
-│   ├── ui-manager.js       # UI状態管理
-│   ├── recipe-manager.js   # レシピ操作
-│   ├── inventory-manager.js # 材料計算管理
-│   ├── file-manager.js     # ファイル操作
-│   ├── theme-manager.js    # テーマ切り替え
-│   ├── custom-dropdown.js  # カスタムドロップダウン
-│   └── dropdown-integration.js # ドロップダウン統合
+├── js/                     # ES Modules
+│   ├── app.js              # エントリポイント（状態・永続化・描画の結線）
+│   ├── store.js            # 中央状態ストア（pub/sub, mutation, 改名カスケード）
+│   ├── recipe-logic.js     # 材料展開・依存解決（純粋関数）
+│   ├── schema.js           # スキーマ定義 + マイグレーション（v1→v2）
+│   ├── persistence.js      # localStorage 永続化・自動バックアップ・入出力
+│   ├── combobox.js         # アクセシブルなコンボボックス
+│   ├── dialogs.js          # モーダル・確認/入力ダイアログ・トースト
+│   ├── dom.js              # 安全な DOM 生成ヘルパー（自動エスケープ）
+│   ├── theme.js            # ライト/ダークテーマ管理
+│   ├── icons.js            # アイコン候補
+│   └── views/              # 画面部品
+│       ├── welcome.js      # ウェルカム画面
+│       ├── tree.js         # 依存ツリー（折りたたみ）
+│       ├── materials.js    # 材料計算 + 在庫（have/need）
+│       ├── recipeForm.js   # レシピ追加/編集モーダル
+│       └── recipeList.js   # レシピ一覧モーダル
 └── .github/
     └── copilot-instructions.md # AI開発ガイド
 ```
@@ -143,10 +150,12 @@ cd Recipebox
 
 RecipeBoxは以下の設計原則に基づいています：
 
-- **モジュラー設計**: 機能ごとに分離されたJavaScriptモジュール
-- **再帰的材料展開**: 循環参照検出付きの安全な展開システム
-- **統一UI管理**: `updateAllUI()`による一貫した状態管理
-- **カスタムコンポーネント**: 完全にカスタマイズされたドロップダウンメニュー
+- **ESモジュール設計**: 機能ごとに分離された ES Modules（ビルドレス）
+- **中央状態ストア**: `Store` が状態を保持し、`subscribe()` の pub/sub で UI を更新
+- **再帰的材料展開**: 循環参照検出付きの安全な展開システム（純粋関数）
+- **改名カスケード**: レシピ改名時に参照・在庫キーを自動移設して整合性を維持
+- **下位互換**: `schemaVersion` とマイグレーション層で旧データを自動アップグレード
+- **アクセシブルなコンポーネント**: 単一実装のコンボボックス／アプリ内ダイアログ
 
 詳細な開発ガイドは [`.github/copilot-instructions.md`](.github/copilot-instructions.md) を参照してください。
 
