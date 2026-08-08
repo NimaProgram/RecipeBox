@@ -274,7 +274,9 @@ input, textarea, select { font: inherit; color: inherit; }
 .combobox.open .combobox-arrow { transform: rotate(180deg); }
 
 .combobox-popover {
-    position: absolute; top: calc(100% + 6px); left: 0; right: 0; z-index: 50;
+    /* 位置(left/top/width/max-height)は JS が fixed で設定し、
+       祖先の overflow によるクリップを回避する */
+    position: fixed; z-index: 1200;
     background: var(--surface); border: 1px solid var(--border);
     border-radius: var(--r); box-shadow: var(--shadow-lg);
     padding: 6px; display: none; max-height: 320px; overflow: hidden;
@@ -291,7 +293,7 @@ input, textarea, select { font: inherit; color: inherit; }
 }
 .combobox-search-input:focus { outline: none; border-color: var(--primary); }
 
-.combobox-options { overflow-y: auto; display: flex; flex-direction: column; gap: 2px; }
+.combobox-options { overflow-y: auto; display: flex; flex-direction: column; gap: 2px; flex: 1 1 auto; min-height: 0; }
 .combobox-options:focus-visible { outline: none; }
 .combobox-option {
     display: flex; align-items: center; gap: 9px;
