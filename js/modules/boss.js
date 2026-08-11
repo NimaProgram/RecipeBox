@@ -102,7 +102,10 @@ export function mountBoss(container, bossStore) {
         toolBtn('fa-table-list', 'タイムテーブル編集', 'primary', () => openTimetableEditor(bossStore)),
         muteBtn,
     ];
-    if (isPipSupported()) actions.push(toolBtn('fa-window-restore', 'PiP', 'ghost', () => openBossPip(bossStore)));
+    if (isPipSupported()) {
+        actions.push(toolBtn('fa-window-restore', 'PiP', 'ghost', () => openBossPip(bossStore)));
+        actions.push(toolBtn('fa-window-minimize', 'ミニPiP', 'ghost', () => openNextBossPip(bossStore)));
+    }
 
     const header = el('div', { class: 'boss-header' }, [
         el('div', { class: 'panel-head-title' }, [icon('fa-dragon'), el('h2', {}, 'ボス出現カウントダウン')]),
@@ -137,6 +140,66 @@ export function openBossPip(bossStore) {
             const view = createCountdownView(bossStore);
             content.appendChild(view.element);
             container.append(controls, content);
+            return { dispose: view.dispose };
+        },
+    });
+}
+
+/**
+ * 「次に出現するボス」1件だけを表示する極小ビュー（約 300x50 のミニ PiP 用）。
+ * @returns {{element:HTMLElement, dispose:Function}}
+ */
+export function createNextBossView(bossStore) {
+    const iconEl = el('span', { class: 'pip-mini-icon' });
+    const nameEl = el('span', { class: 'pip-mini-name' });
+    const remEl = el('span', { class: 'pip-mini-remaining' });
+    const root = el('div', { class: 'pip-mini' }, [iconEl, nameEl, remEl]);
+    let spawnMs = null;
+    let alerted = false;
+
+    function rebuild() {
+        const up = computeUpcoming(bossStore.getBosses(), new Date(), { horizonHours: 168 });
+        root.classList.remove('imminent');
+        alerted = false;
+        if (up.length === 0) {
+            iconEl.replaceChildren(icon('fa-hourglass-half'));
+            nameEl.textContent = '出現予定なし';
+            remEl.textContent = '--:--:--';
+            spawnMs = null;
+            return;
+        }
+        const u = up[0];
+        iconEl.replaceChildren(icon(u.boss.icon || DEFAULT_BOSS_ICON));
+        nameEl.textContent = u.boss.name;
+        nameEl.title = `${u.boss.name}（${formatSpawnLabel(u.entry)}）`;
+        spawnMs = u.spawn.getTime();
+        tick();
+    }
+
+    function tick() {
+        if (spawnMs == null) return;
+        const remaining = spawnMs - Date.now();
+        if (remaining <= 0) { rebuild(); return; }
+        remEl.textContent = formatCountdown(remaining);
+        const imminent = remaining <= IMMINENT_MS;
+        root.classList.toggle('imminent', imminent);
+        if (imminent && !alerted) { alerted = true; alertBeep(); }
+    }
+
+    const unsubscribe = bossStore.subscribe(rebuild);
+    rebuild();
+    const timer = setInterval(tick, 1000);
+    return { element: root, dispose() { clearInterval(timer); unsubscribe(); } };
+}
+
+/** 次のボスだけを表示する極小 PiP（約 300x50） */
+export function openNextBossPip(bossStore) {
+    return openPipWindow({
+        title: 'MMO Toolkit — 次のボス',
+        width: 300, height: 56,
+        mount: (win, container) => {
+            const view = createNextBossView(bossStore);
+            container.appendChild(view.element);
             return { dispose: view.dispose };
         },
     });
