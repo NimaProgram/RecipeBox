@@ -13,6 +13,7 @@ import { buildTree, setTreeCollapsed } from './views/tree.js';
 import { renderMaterials } from './views/materials.js';
 import { openRecipeForm } from './views/recipeForm.js';
 import { openRecipeList } from './views/recipeList.js';
+import { openCategoryManager } from './views/categories.js';
 import { renderWelcome } from './views/welcome.js';
 
 const store = new Store();
@@ -84,6 +85,7 @@ function renderToolbar() {
         el('div', { class: 'toolbar-actions' }, [
             toolBtn('fa-plus', 'レシピ追加', 'primary', () => openRecipeForm(store)),
             toolBtn('fa-list', '一覧', 'ghost', () => openRecipeList(store, { onSelect: selectRecipe })),
+            toolBtn('fa-tags', 'カテゴリ', 'ghost', () => openCategoryManager(store)),
             toolBtn('fa-download', 'エクスポート', 'ghost', doExport),
             toolBtn('fa-upload', 'インポート', 'ghost', doImport),
             toolBtn('fa-clock-rotate-left', 'バックアップ', 'ghost', openBackupList),

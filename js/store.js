@@ -4,6 +4,7 @@
 // UI は subscribe() で再描画をフックし、mutation メソッドのみで状態を変える。
 
 import { migrate, buildExport, DEFAULT_ICON } from './schema.js';
+import { seedCategories, normalizeIconClass } from './icons.js';
 import { expandIngredients, getDependencies, getDependents, wouldCreateCycle } from './recipe-logic.js';
 
 export class Store {
@@ -12,6 +13,8 @@ export class Store {
         this.recipes = new Map();
         /** @type {Map<string, number>} */
         this.inventory = new Map();
+        /** @type {{icon:string,label:string}[]} アイコン=カテゴリのカタログ（icon がキー） */
+        this.categories = seedCategories();
         this._subscribers = new Set();
     }
 
@@ -45,6 +48,62 @@ export class Store {
     }
 
     getInventory(name) { return this.inventory.get(name) || 0; }
+
+    // --- カテゴリ（アイコン） ---------------------------------------------
+    getCategories() { return this.categories; }
+
+    hasCategory(icon) {
+        const c = normalizeIconClass(icon);
+        return this.categories.some(cat => cat.icon === c);
+    }
+
+    /** 指定グリフを使っているノード数（削除警告用） */
+    countNodesUsingIcon(icon) {
+        const c = normalizeIconClass(icon);
+        return this.getAllRecipes().filter(r => r.icon === c).length;
+    }
+
+    /** カテゴリを追加する。icon は一意。 */
+    addCategory({ icon, label }) {
+        const c = normalizeIconClass(icon);
+        if (!c) throw new Error('アイコン（fa-… 形式）を指定してください');
+        if (this.hasCategory(c)) throw new Error('そのアイコンのカテゴリは既に存在します');
+        this.categories.push({ icon: c, label: String(label || '').trim() || c });
+        this.emit();
+        return c;
+    }
+
+    /**
+     * カテゴリを更新する。グリフ(icon)を変更した場合は、そのグリフを使う
+     * 全ノードの icon をカスケード更新する（renameNode と同型）。
+     */
+    updateCategory(oldIcon, { icon, label }) {
+        const from = normalizeIconClass(oldIcon);
+        const to = normalizeIconClass(icon) || from;
+        const cat = this.categories.find(c => c.icon === from);
+        if (!cat) throw new Error('カテゴリが見つかりません');
+        if (to !== from && this.hasCategory(to)) {
+            throw new Error('そのアイコンのカテゴリは既に存在します');
+        }
+
+        cat.icon = to;
+        cat.label = String(label || '').trim() || to;
+
+        // グリフ変更 → ノードへカスケード
+        if (to !== from) {
+            for (const node of this.recipes.values()) {
+                if (node.icon === from) node.icon = to;
+            }
+        }
+        this.emit();
+    }
+
+    deleteCategory(icon) {
+        const c = normalizeIconClass(icon);
+        const before = this.categories.length;
+        this.categories = this.categories.filter(cat => cat.icon !== c);
+        if (this.categories.length !== before) this.emit();
+    }
 
     isEmpty() { return this.recipes.size === 0 && this.inventory.size === 0; }
 
@@ -168,21 +227,24 @@ export class Store {
     toJSON() {
         return buildExport(
             Object.fromEntries(this.recipes),
-            Object.fromEntries(this.inventory)
+            Object.fromEntries(this.inventory),
+            this.categories
         );
     }
 
-    /** 任意入力（v1/v2）を取り込み、状態を置き換える */
+    /** 任意入力（v1/v2/v3）を取り込み、状態を置き換える */
     load(input) {
         const data = migrate(input);
         this.recipes = new Map(Object.entries(data.recipes));
         this.inventory = new Map(Object.entries(data.inventory));
+        this.categories = data.categories;
         this.emit();
     }
 
     clear() {
         this.recipes = new Map();
         this.inventory = new Map();
+        this.categories = seedCategories();
         this.emit();
     }
 
