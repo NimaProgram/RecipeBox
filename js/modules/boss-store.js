@@ -54,11 +54,62 @@ export function migrate(input) {
     return rawBosses.map(normalizeBoss);
 }
 
-/** 黒い砂漠風のサンプル（編集可能・任意で読込） */
+// 黒い砂漠（PC）のワールド/フィールドボス出現表に基づくサンプル（編集可能・任意で読込）。
+// 曜日: 0=日, 1=月, 2=火, 3=水, 4=木, 5=金, 6=土。時刻は端末ローカルタイム。
+// ボス名は黒い砂漠日本版の正式な表記に準拠。
 export const SAMPLE_BOSSES = [
-    { name: 'クザカ', icon: 'fa-dragon', times: [{ day: 1, time: '12:00' }, { day: 4, time: '21:00' }, { day: 6, time: '15:00' }] },
-    { name: 'カラング', icon: 'fa-skull', times: [{ day: 2, time: '20:00' }, { day: 5, time: '13:00' }] },
-    { name: 'ヌベル', icon: 'fa-spaghetti-monster-flying', times: [{ day: 0, time: '18:00' }, { day: 3, time: '10:00' }] },
+    { name: 'ガーモス', icon: 'fa-dragon', times: [
+        { day: 1, time: '00:15' }, { day: 3, time: '00:15' }, { day: 5, time: '00:15' }, { day: 0, time: '00:15' },
+        { day: 1, time: '14:00' }, { day: 2, time: '14:00' }, { day: 3, time: '14:00' }, { day: 4, time: '14:00' }, { day: 5, time: '14:00' }, { day: 6, time: '14:00' },
+        { day: 1, time: '20:00' }, { day: 2, time: '20:00' }, { day: 3, time: '20:00' }, { day: 5, time: '20:00' },
+    ] },
+    { name: 'クザカ', icon: 'fa-skull', times: [
+        { day: 1, time: '01:30' }, { day: 3, time: '11:00' }, { day: 5, time: '16:00' }, { day: 6, time: '16:00' },
+        { day: 2, time: '19:00' }, { day: 0, time: '19:00' }, { day: 4, time: '20:00' },
+    ] },
+    { name: 'ヌーベル', icon: 'fa-spaghetti-monster-flying', times: [
+        { day: 2, time: '01:30' }, { day: 0, time: '01:30' }, { day: 1, time: '11:00' },
+        { day: 2, time: '16:00' }, { day: 4, time: '16:00' }, { day: 4, time: '19:00' }, { day: 5, time: '19:00' }, { day: 0, time: '23:15' },
+    ] },
+    { name: 'オピン', icon: 'fa-ghost', times: [
+        { day: 3, time: '01:30' }, { day: 1, time: '23:15' }, { day: 5, time: '23:15' },
+    ] },
+    { name: 'カランダ', icon: 'fa-crow', times: [
+        { day: 4, time: '01:30' }, { day: 5, time: '11:00' }, { day: 6, time: '11:00' },
+        { day: 3, time: '16:00' }, { day: 0, time: '16:00' }, { day: 1, time: '19:00' }, { day: 2, time: '23:15' },
+    ] },
+    { name: 'クツム', icon: 'fa-worm', times: [
+        { day: 5, time: '01:30' }, { day: 6, time: '01:30' }, { day: 2, time: '11:00' }, { day: 0, time: '11:00' },
+        { day: 1, time: '16:00' }, { day: 0, time: '20:00' }, { day: 4, time: '23:15' },
+    ] },
+    { name: 'ベル', icon: 'fa-fish', times: [
+        { day: 0, time: '14:00' }, { day: 3, time: '23:15' },
+    ] },
+    { name: 'ギュント', icon: 'fa-mountain', times: [
+        { day: 3, time: '19:00' }, { day: 6, time: '19:00' },
+    ] },
+    { name: 'ムラカ', icon: 'fa-paw', times: [
+        { day: 3, time: '19:00' }, { day: 6, time: '19:00' },
+    ] },
+    { name: '黒い影', icon: 'fa-user-secret', times: [
+        { day: 6, time: '17:00' },
+    ] },
+    { name: '不可殺', icon: 'fa-skull-crossbones', times: [
+        { day: 1, time: '01:30' }, { day: 6, time: '01:30' }, { day: 5, time: '11:00' }, { day: 0, time: '11:00' },
+        { day: 4, time: '16:00' }, { day: 2, time: '19:00' }, { day: 0, time: '20:00' }, { day: 1, time: '23:15' },
+    ] },
+    { name: 'ウトゥリ', icon: 'fa-hippo', times: [
+        { day: 2, time: '01:30' }, { day: 1, time: '11:00' }, { day: 6, time: '11:00' }, { day: 5, time: '16:00' },
+        { day: 0, time: '16:00' }, { day: 4, time: '19:00' }, { day: 4, time: '20:00' }, { day: 2, time: '23:15' },
+    ] },
+    { name: '金豚王', icon: 'fa-piggy-bank', times: [
+        { day: 3, time: '01:30' }, { day: 4, time: '01:30' }, { day: 2, time: '11:00' }, { day: 1, time: '16:00' },
+        { day: 6, time: '16:00' }, { day: 5, time: '19:00' }, { day: 4, time: '23:15' }, { day: 0, time: '23:15' },
+    ] },
+    { name: '山君', icon: 'fa-cat', times: [
+        { day: 5, time: '01:30' }, { day: 0, time: '01:30' }, { day: 3, time: '11:00' }, { day: 2, time: '16:00' },
+        { day: 3, time: '16:00' }, { day: 1, time: '19:00' }, { day: 0, time: '19:00' }, { day: 5, time: '23:15' },
+    ] },
 ];
 
 export class BossStore {

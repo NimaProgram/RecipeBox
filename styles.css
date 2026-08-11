@@ -75,6 +75,10 @@
 /* ---- Reset / Base ------------------------------------------------------ */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+/* スクロールバー非表示（スクロール機能は維持）— アプリ全体 + PiP に適用 */
+* { scrollbar-width: none; -ms-overflow-style: none; }
+*::-webkit-scrollbar { width: 0; height: 0; display: none; }
+
 html { -webkit-text-size-adjust: 100%; }
 
 body {
@@ -585,9 +589,28 @@ body.pip { min-height: 100vh; background: var(--bg); }
 body.pip .materials-grid { grid-template-columns: 1fr; }
 body.pip .result-header { flex-direction: column; align-items: stretch; gap: 6px; }
 body.pip .tree-controls { margin-bottom: 10px; }
-body.pip .boss-countdown { gap: 6px; }
 body.pip .pip-title { display: flex; align-items: center; gap: 8px; font-weight: 600; }
 body.pip .pip-title i { color: var(--primary); }
+
+/* PiP ではボス行を約半分の高さにして、小さい窓でも全件表示 */
+body.pip .boss-countdown { gap: 4px; }
+body.pip .boss-row { padding: 5px 9px; gap: 8px; border-radius: 8px; }
+body.pip .boss-row-icon { width: 26px; height: 26px; font-size: .8rem; border-radius: 7px; }
+body.pip .boss-row-name { font-size: .82rem; }
+body.pip .boss-row-time { font-size: .7rem; }
+body.pip .boss-remaining-label { display: none; }
+body.pip .boss-remaining { font-size: .95rem; }
+
+/* ミニ PiP（次のボスのみ・約 300x50） */
+.pip-mini { display: flex; align-items: center; gap: 8px; height: 100%; padding: 6px 10px; overflow: hidden; }
+.pip-mini-icon {
+    display: grid; place-items: center; width: 30px; height: 30px; flex: none;
+    background: var(--primary-soft); color: var(--primary); border-radius: 8px; font-size: .85rem;
+}
+.pip-mini.imminent .pip-mini-icon { background: var(--danger-soft); color: var(--danger); }
+.pip-mini-name { flex: 1; min-width: 0; font-weight: 600; font-size: .85rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pip-mini-remaining { flex: none; font-variant-numeric: tabular-nums; font-weight: 700; font-size: 1.05rem; }
+.pip-mini.imminent .pip-mini-remaining { color: var(--danger); }
 
 /* ---- Module nav -------------------------------------------------------- */
 .module-nav { display: flex; gap: 6px; }
