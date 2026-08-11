@@ -2,7 +2,7 @@
 // - HTML: network-first（更新をすぐ反映、オフライン時はキャッシュ）
 // - その他: cache-first（高速表示）
 
-const CACHE_NAME = 'recipebox-v2.3.0';
+const CACHE_NAME = 'recipebox-v2.4.0';
 const CORE_ASSETS = [
     './',
     './index.html',
@@ -29,6 +29,11 @@ const CORE_ASSETS = [
     './js/views/recipeList.js',
     './js/views/categories.js',
     './js/views/pip.js',
+    './js/views/pip-host.js',
+    './js/beep.js',
+    './js/modules/boss-logic.js',
+    './js/modules/boss-store.js',
+    './js/modules/boss.js',
 ];
 
 self.addEventListener('install', (event) => {
