@@ -16,24 +16,60 @@ import { openRecipeList } from './views/recipeList.js';
 import { openCategoryManager } from './views/categories.js';
 import { openPip } from './views/pip.js';
 import { renderWelcome } from './views/welcome.js';
+import { BossStore } from './modules/boss-store.js';
+import { mountBoss } from './modules/boss.js';
 
 const store = new Store();
+const bossStore = new BossStore();
 const theme = new ThemeManager();
 
 /** 描画をまたいで保持する UI 状態 */
-const ui = { selected: '', quantity: 100 };
+const ui = { module: 'recipe', selected: '', quantity: 100 };
+
+const MODULES = [
+    { id: 'recipe', label: 'レシピ計算', icon: 'fa-utensils' },
+    { id: 'boss', label: 'ボス出現', icon: 'fa-dragon' },
+];
 
 let appRoot;
 let themeBtn;
+let navEl;
+let disposeModule = null;
 
 // --- 起動 -----------------------------------------------------------------
 function boot() {
     appRoot = document.getElementById('app');
     setupHeader();
+    setupNav();
     initPersistence(store);          // 旧データは migrate 済みで読み込まれる
-    store.subscribe(render);         // 構造変化で再描画
+    // 各ストア変化は担当モジュール表示中のみ再描画（ボスの一覧はモジュール内で自己更新）
+    store.subscribe(() => { if (ui.module === 'recipe') render(); });
     render();
     registerServiceWorker();
+}
+
+function setupNav() {
+    navEl = document.getElementById('moduleNav');
+    renderNav();
+}
+
+function renderNav() {
+    if (!navEl) return;
+    clear(navEl);
+    MODULES.forEach(m => {
+        navEl.appendChild(el('button', {
+            type: 'button', class: 'module-tab' + (ui.module === m.id ? ' active' : ''),
+            'aria-current': ui.module === m.id ? 'page' : null,
+            onclick: () => switchModule(m.id),
+        }, [icon(m.icon), ' ', m.label]));
+    });
+}
+
+function switchModule(id) {
+    if (ui.module === id) return;
+    ui.module = id;
+    renderNav();
+    render();
 }
 
 function setupHeader() {
@@ -54,7 +90,17 @@ function updateThemeIcon() {
 // --- 描画 -----------------------------------------------------------------
 function render() {
     if (!appRoot) return;
+    if (disposeModule) { try { disposeModule(); } catch { /* noop */ } disposeModule = null; }
     clear(appRoot);
+    renderNav();
+
+    if (ui.module === 'boss') {
+        const handle = mountBoss(appRoot, bossStore) || {};
+        disposeModule = handle.dispose || null;
+        return;
+    }
+
+    // レシピ計算モジュール
     if (store.isEmpty()) {
         appRoot.appendChild(renderWelcome({ onCreate: () => openRecipeForm(store), onImport: doImport }));
     } else {

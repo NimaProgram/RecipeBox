@@ -585,6 +585,66 @@ body.pip { min-height: 100vh; background: var(--bg); }
 body.pip .materials-grid { grid-template-columns: 1fr; }
 body.pip .result-header { flex-direction: column; align-items: stretch; gap: 6px; }
 body.pip .tree-controls { margin-bottom: 10px; }
+body.pip .boss-countdown { gap: 6px; }
+body.pip .pip-title { display: flex; align-items: center; gap: 8px; font-weight: 600; }
+body.pip .pip-title i { color: var(--primary); }
+
+/* ---- Module nav -------------------------------------------------------- */
+.module-nav { display: flex; gap: 6px; }
+.module-tab {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 7px 14px; border-radius: var(--r-full); font-size: .9rem; font-weight: 500;
+    background: transparent; border: 1px solid transparent; color: var(--text-muted); transition: all .16s;
+}
+.module-tab:hover { background: var(--surface-2); color: var(--text); }
+.module-tab.active { background: var(--primary-soft); color: var(--primary); border-color: color-mix(in srgb, var(--primary) 35%, transparent); }
+.module-tab i { font-size: .9em; }
+
+/* ---- Boss countdown module --------------------------------------------- */
+.boss-module { display: flex; flex-direction: column; gap: 14px; }
+.boss-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.panel-head-title { display: flex; align-items: center; gap: 10px; }
+.panel-head-title i { color: var(--primary); }
+.panel-head-title h2 { font-size: 1.15rem; }
+.boss-header-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.boss-note { font-size: .82rem; color: var(--text-faint); }
+
+.boss-countdown { display: flex; flex-direction: column; gap: 8px; }
+.boss-empty { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.boss-row {
+    display: flex; align-items: center; gap: 12px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--r); padding: 12px 14px; transition: border-color .2s, background .2s;
+}
+.boss-row.imminent { border-color: var(--danger); background: var(--danger-soft); animation: boss-pulse 1s ease-in-out infinite; }
+@keyframes boss-pulse { 0%,100% { box-shadow: 0 0 0 0 transparent; } 50% { box-shadow: 0 0 0 3px color-mix(in srgb, var(--danger) 30%, transparent); } }
+.boss-row-icon {
+    display: grid; place-items: center; width: 42px; height: 42px; flex: none;
+    background: var(--primary-soft); color: var(--primary); border-radius: 11px; font-size: 1.1rem;
+}
+.boss-row.imminent .boss-row-icon { background: var(--danger-soft); color: var(--danger); }
+.boss-row-info { flex: 1; min-width: 0; }
+.boss-row-name { font-weight: 600; font-size: .98rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.boss-row-time { font-size: .82rem; color: var(--text-muted); display: flex; align-items: center; gap: 4px; }
+.boss-row-time-icon { font-size: .72rem; color: var(--text-faint); }
+.boss-remaining-wrap { text-align: right; flex: none; }
+.boss-remaining-label { display: block; font-size: .68rem; color: var(--text-faint); }
+.boss-remaining { font-variant-numeric: tabular-nums; font-weight: 700; font-size: 1.15rem; color: var(--text); }
+.boss-row.imminent .boss-remaining { color: var(--danger); }
+
+/* ---- Timetable editor -------------------------------------------------- */
+.boss-edit-toolbar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+.boss-edit-grid { display: flex; flex-direction: column; gap: 8px; }
+.boss-edit-row {
+    display: flex; align-items: center; gap: 12px;
+    background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--r); padding: 12px 14px;
+}
+.boss-edit-times { font-size: .8rem; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.boss-edit-actions { display: flex; gap: 6px; flex: none; }
+.boss-times-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
+.boss-time-row { display: flex; gap: 8px; align-items: center; }
+.boss-day-select { flex: none; width: 120px; }
+.boss-time-input { flex: none; width: 130px; }
 
 /* ---- Utilities / State ------------------------------------------------- */
 body.modal-open { overflow: hidden; }
@@ -603,6 +663,14 @@ body.modal-open { overflow: hidden; }
     .materials-grid { grid-template-columns: 1fr; }
     .modal-overlay { padding: 10px; align-items: flex-end; }
     .modal-content { max-height: calc(100vh - 20px); }
+    .brand-name { display: none; }               /* 省スペース: ロゴのみ */
+    .module-tab { padding: 7px 10px; }
+    .module-tab span, .boss-header-actions .btn span { }
+}
+@media (max-width: 400px) {
+    .module-tab .fa, .module-tab i { margin: 0; }
+    .module-tab { font-size: 0; gap: 0; padding: 8px 11px; }  /* アイコンのみ */
+    .module-tab i { font-size: 1rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
