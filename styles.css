@@ -486,6 +486,48 @@ input, textarea, select { font: inherit; color: inherit; }
 .backup-info { display: flex; align-items: center; gap: 10px; font-size: .88rem; }
 .backup-info i { color: var(--primary); }
 
+/* ---- Category manager -------------------------------------------------- */
+.add-category { margin-bottom: 14px; }
+.category-grid { display: flex; flex-direction: column; gap: 8px; }
+.category-row {
+    display: flex; align-items: center; gap: 12px;
+    background: var(--surface-2); border: 1px solid var(--border);
+    border-radius: var(--r); padding: 10px 14px;
+}
+.category-icon {
+    display: grid; place-items: center; width: 40px; height: 40px; flex: none;
+    background: var(--primary-soft); color: var(--primary); border-radius: 10px; font-size: 1.05rem;
+}
+.category-info { flex: 1; min-width: 0; }
+.category-label { font-weight: 600; font-size: .95rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.category-code { font-size: .76rem; color: var(--text-faint); }
+.category-usage { font-size: .76rem; color: var(--text-muted); white-space: nowrap; }
+.category-actions { display: flex; gap: 6px; flex: none; }
+
+/* ---- Icon picker (palette + free input + preview) ---------------------- */
+.icon-picker { display: flex; flex-direction: column; gap: 10px; }
+.icon-preview { display: flex; align-items: center; gap: 10px; }
+.icon-preview-glyph {
+    display: grid; place-items: center; width: 44px; height: 44px; flex: none;
+    background: var(--primary-soft); color: var(--primary); border-radius: 11px; font-size: 1.3rem;
+}
+.icon-preview-empty { color: var(--text-faint); font-weight: 700; }
+.icon-preview-code { font-size: .85rem; color: var(--text-muted); }
+.icon-palette-wrap {
+    max-height: 200px; overflow-y: auto;
+    border: 1px solid var(--border); border-radius: var(--r-sm); padding: 8px; background: var(--surface);
+}
+.icon-palette {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(42px, 1fr)); gap: 6px;
+}
+.icon-cell {
+    display: grid; place-items: center; height: 42px;
+    background: var(--surface-2); border: 1px solid var(--border);
+    border-radius: var(--r-sm); color: var(--text-muted); font-size: 1.05rem; transition: all .12s;
+}
+.icon-cell:hover { background: var(--surface-hover); color: var(--text); }
+.icon-cell.selected { background: var(--primary-soft); color: var(--primary); border-color: var(--primary); }
+
 /* ---- Toast ------------------------------------------------------------- */
 .toast-host {
     position: fixed; top: 16px; right: 16px; z-index: 2000;

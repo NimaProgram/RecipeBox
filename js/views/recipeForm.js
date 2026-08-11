@@ -8,7 +8,25 @@
 import { el, icon } from '../dom.js';
 import { openModal, notify, promptDialog } from '../dialogs.js';
 import { createCombobox } from '../combobox.js';
-import { ICON_OPTIONS, DEFAULT_ICON } from '../icons.js';
+import { DEFAULT_ICON } from '../icons.js';
+import { categoryOptions, openCategoryEditor } from './categories.js';
+
+/** カテゴリ選択コンボボックス（検索 + インラインでカテゴリ追加） */
+function createCategoryBox(store, value) {
+    const box = createCombobox({
+        options: categoryOptions(store),
+        value: value || DEFAULT_ICON,
+        placeholder: 'カテゴリを選択...',
+        searchable: true,
+        allowAdd: true,
+        addLabel: 'カテゴリを追加',
+        onAdd: async () => {
+            const created = await openCategoryEditor(store);
+            if (created) { box.setOptions(categoryOptions(store)); box.setValue(created); }
+        },
+    });
+    return box;
+}
 
 function ingredientOptions(store, excludeName) {
     return store.getAllRecipes()
@@ -32,7 +50,7 @@ function openIngredientCreator(store) {
 
         const nameInput = el('input', { type: 'text', class: 'form-input', placeholder: '例: トマト, 小麦粉, 砂糖', 'data-autofocus': 'true' });
         const errorEl = el('small', { class: 'form-error', role: 'alert' });
-        const iconBox = createCombobox({ options: ICON_OPTIONS, value: DEFAULT_ICON });
+        const iconBox = createCategoryBox(store, DEFAULT_ICON);
 
         const accept = () => {
             const name = nameInput.value.trim();
@@ -76,7 +94,7 @@ export function openRecipeForm(store, editName = null) {
 
     const nameInput = el('input', { type: 'text', class: 'form-input', required: true, value: editing ? editing.name : '', placeholder: 'レシピ / 材料名' });
     const baseQtyInput = el('input', { type: 'number', min: '1', class: 'form-input', value: editing ? String(editing.baseQuantity || 1) : '1' });
-    const iconBox = createCombobox({ options: ICON_OPTIONS, value: editing ? editing.icon : DEFAULT_ICON });
+    const iconBox = createCategoryBox(store, editing ? editing.icon : DEFAULT_ICON);
     const descInput = el('textarea', { class: 'form-input form-textarea', rows: '2', placeholder: '任意のメモ' });
     if (editing) descInput.value = editing.description || '';
 
