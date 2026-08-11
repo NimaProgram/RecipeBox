@@ -14,6 +14,7 @@ import { renderMaterials } from './views/materials.js';
 import { openRecipeForm } from './views/recipeForm.js';
 import { openRecipeList } from './views/recipeList.js';
 import { openCategoryManager } from './views/categories.js';
+import { openPip } from './views/pip.js';
 import { renderWelcome } from './views/welcome.js';
 
 const store = new Store();
@@ -106,6 +107,15 @@ function toolBtn(ic, label, variant, onClick) {
     return el('button', { type: 'button', class: `btn btn-${variant} btn-sm`, onclick: onClick }, [icon(ic), ' ', label]);
 }
 
+/** パネル見出しの PiP 起動ボタン（構成 or 計算モードで開く） */
+function pipButton(mode) {
+    return el('button', {
+        type: 'button', class: 'panel-pip-btn', title: 'PiP（別ウィンドウ）で表示',
+        'aria-label': 'ピクチャーインピクチャーで表示',
+        onclick: () => openPip(store, { mode, selected: ui.selected, quantity: ui.quantity }),
+    }, [icon('fa-window-restore')]);
+}
+
 function renderRecipePanel(selectable) {
     const selector = createCombobox({
         options: selectable.map(r => ({ value: r.name, label: r.name, icon: r.icon || 'fa-utensils' })),
@@ -129,7 +139,7 @@ function renderRecipePanel(selectable) {
     }
 
     return el('section', { class: 'panel' }, [
-        el('div', { class: 'panel-head' }, [icon('fa-sitemap'), el('h2', {}, 'レシピ構成')]),
+        el('div', { class: 'panel-head' }, [icon('fa-sitemap'), el('h2', {}, 'レシピ構成'), pipButton('tree')]),
         el('div', { class: 'panel-body' }, [
             el('div', { class: 'field' }, [el('label', { class: 'form-label' }, '計算対象'), selector.element]),
             treeHost,
@@ -158,7 +168,7 @@ function renderCalculatorPanel() {
     compute();
 
     return el('section', { class: 'panel' }, [
-        el('div', { class: 'panel-head' }, [icon('fa-calculator'), el('h2', {}, '材料計算')]),
+        el('div', { class: 'panel-head' }, [icon('fa-calculator'), el('h2', {}, '材料計算'), pipButton('materials')]),
         el('div', { class: 'panel-body' }, [
             el('div', { class: 'calc-input' }, [
                 el('label', { class: 'form-label' }, '作りたい個数'),
