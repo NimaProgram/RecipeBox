@@ -153,27 +153,58 @@ export function createNextBossView(bossStore) {
     const iconEl = el('span', { class: 'pip-mini-icon' });
     const nameEl = el('span', { class: 'pip-mini-name' });
     const remEl = el('span', { class: 'pip-mini-remaining' });
-    const root = el('div', { class: 'pip-mini' }, [iconEl, nameEl, remEl]);
+    const skipBtn = el('button', {
+        type: 'button', class: 'pip-mini-skip', title: '次のボスへ', 'aria-label': '次のボスへスキップ',
+        onclick: skip,
+    }, [icon('fa-forward-step')]);
+    const root = el('div', { class: 'pip-mini' }, [iconEl, nameEl, remEl, skipBtn]);
+
     let spawnMs = null;
     let alerted = false;
+    let pinnedKey = null; // スキップで固定した出現のキー（null=最短を表示）
+
+    const keyOf = (u) => `${u.boss.id}|${u.entry.day}|${u.entry.time}|${u.spawn.getTime()}`;
+
+    function upcoming() {
+        return computeUpcoming(bossStore.getBosses(), new Date(), { horizonHours: 168 });
+    }
 
     function rebuild() {
-        const up = computeUpcoming(bossStore.getBosses(), new Date(), { horizonHours: 168 });
+        const list = upcoming();
         root.classList.remove('imminent');
         alerted = false;
-        if (up.length === 0) {
+
+        if (list.length === 0) {
             iconEl.replaceChildren(icon('fa-hourglass-half'));
             nameEl.textContent = '出現予定なし';
+            nameEl.removeAttribute('title');
             remEl.textContent = '--:--:--';
             spawnMs = null;
+            skipBtn.disabled = true;
+            pinnedKey = null;
             return;
         }
-        const u = up[0];
+
+        // スキップ固定があれば該当を表示。無ければ（過ぎた等）最短へフォールバック。
+        let u = pinnedKey ? list.find(x => keyOf(x) === pinnedKey) : null;
+        if (!u) { u = list[0]; pinnedKey = null; }
+
         iconEl.replaceChildren(icon(u.boss.icon || DEFAULT_BOSS_ICON));
         nameEl.textContent = u.boss.name;
         nameEl.title = `${u.boss.name}（${formatSpawnLabel(u.entry)}）`;
         spawnMs = u.spawn.getTime();
+        skipBtn.disabled = list.length <= 1;
         tick();
+    }
+
+    function skip() {
+        const list = upcoming();
+        if (list.length <= 1) return;
+        const curKey = pinnedKey || (list[0] && keyOf(list[0]));
+        const idx = list.findIndex(x => keyOf(x) === curKey);
+        const next = list[((idx < 0 ? 0 : idx) + 1) % list.length];
+        pinnedKey = keyOf(next);
+        rebuild();
     }
 
     function tick() {
