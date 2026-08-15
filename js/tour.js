@@ -109,12 +109,20 @@ async function showStep() {
     currentTarget = target;
 
     if (target && target.scrollIntoView) {
-        try { target.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'smooth' }); } catch { /* noop */ }
+        // smooth はスクロール完了前に矩形を測ってズレるため使わない
+        try { target.scrollIntoView({ block: 'nearest', inline: 'nearest' }); } catch { /* noop */ }
     }
 
     renderTip(step, target);
+    if (typeof step.onShow === 'function') { try { step.onShow(target); } catch { /* noop */ } }
     positionFor(target);
     wireAdvance(step, target);
+
+    // モーダルの開閉アニメーション(約200ms)やスクロールが落ち着いてから再配置し、
+    // スポットライトのズレを補正する。
+    requestAnimationFrame(() => { if (active) positionFor(currentTarget); });
+    setTimeout(() => { if (active) positionFor(currentTarget); }, 120);
+    setTimeout(() => { if (active) positionFor(currentTarget); }, 300);
 }
 
 function renderTip(step, target) {

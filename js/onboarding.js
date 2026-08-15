@@ -13,7 +13,15 @@ function openCreateTarget() {
         || document.querySelector('[data-tour="toolbar-add"]');
 }
 
-function buildSteps() {
+/** 重複しないサンプル名を返す（再生時の「既に存在します」を回避） */
+function sampleRecipeName(store) {
+    const base = 'チーズパイ';
+    let name = base, n = 2;
+    while (store && store.hasRecipe && store.hasRecipe(name)) name = base + n++;
+    return name;
+}
+
+function buildSteps(store) {
     return [
         {
             target: null,
@@ -30,8 +38,9 @@ function buildSteps() {
         {
             target: '[data-tour="rf-name"]',
             title: 'レシピ名を入力',
-            body: '作りたいレシピ／アイテムの名前を入力します（例: チーズパイ）。',
-            action: 'input',
+            body: '作りたいレシピ／アイテムの名前を入力します。例として名前を入れておきました（自由に変更できます）。',
+            action: 'button',
+            onShow: (elm) => { if (elm && !String(elm.value).trim()) elm.value = sampleRecipeName(store); },
         },
         {
             target: '[data-tour="rf-baseqty"]',
@@ -60,7 +69,7 @@ function buildSteps() {
         {
             target: '[data-tour="calc-select"]',
             title: 'レシピを選択',
-            body: '作ったレシピを選ぶと、構成ツリーが表示されます。',
+            body: '作ったレシピはここで選択できます（材料を登録したレシピが計算対象になります）。',
             action: 'button',
         },
         {
@@ -85,14 +94,14 @@ function buildSteps() {
 export function maybeStartOnboarding({ store }) {
     if (hasOnboarded()) return;
     if (!store.isEmpty()) { markOnboarded(); return; } // 既存ユーザーは対象外
-    setTimeout(() => startTour(buildSteps(), { onFinish: markOnboarded }), 400);
+    setTimeout(() => startTour(buildSteps(store), { onFinish: markOnboarded }), 400);
 }
 
 /**
  * ヘルプから再生。必要ならレシピモジュールへ切り替えてから開始。
- * @param {{toRecipe?:Function}} ctx
+ * @param {{store:import('./store.js').Store, toRecipe?:Function}} ctx
  */
-export function replayOnboarding({ toRecipe } = {}) {
+export function replayOnboarding({ store, toRecipe } = {}) {
     if (toRecipe) toRecipe();
-    setTimeout(() => startTour(buildSteps(), { onFinish: markOnboarded }), 150);
+    setTimeout(() => startTour(buildSteps(store), { onFinish: markOnboarded }), 150);
 }
