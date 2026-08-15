@@ -1,7 +1,7 @@
 {
     "name": "RecipeBox - 高機能レシピ管理システム",
     "short_name": "RecipeBox",
-    "description": "複雑なレシピと材料の依存関係を効率的に管理。黒い砂漠やMMORPGのアイテム制作に最適な高機能レシピ管理システム",
+    "description": "黒い砂漠などMMORPGの材料計算・レシピ・料理を管理できる無料ツール。必要な材料を自動計算し、ボスの出現時間もカウントダウン表示。",
     "start_url": "./",
     "scope": "./",
     "display": "standalone",
