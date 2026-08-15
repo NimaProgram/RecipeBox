@@ -2,7 +2,7 @@
 // - HTML: network-first（更新をすぐ反映、オフライン時はキャッシュ）
 // - その他: cache-first（高速表示）
 
-const CACHE_NAME = 'recipebox-v2.4.2';
+const CACHE_NAME = 'recipebox-v2.5.0';
 const CORE_ASSETS = [
     './',
     './index.html',
@@ -22,6 +22,8 @@ const CORE_ASSETS = [
     './js/dialogs.js',
     './js/combobox.js',
     './js/icons.js',
+    './js/tour.js',
+    './js/onboarding.js',
     './js/views/welcome.js',
     './js/views/tree.js',
     './js/views/materials.js',
