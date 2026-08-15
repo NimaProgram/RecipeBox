@@ -8,7 +8,7 @@
          インラインの theme ブートストラップは sha256 ハッシュで許可。
          ※ script を変更した場合はハッシュの再生成が必要。 -->
     <meta http-equiv="Content-Security-Policy"
-          content="default-src 'self'; script-src 'self' 'sha256-8iYE7OviB2+MhtBXuVvEEz39fw6tOPbBdppI+gzuCKI='; style-src 'self'; font-src 'self'; img-src 'self' data:; connect-src 'self'; manifest-src 'self'; worker-src 'self'; base-uri 'self'; object-src 'none'; form-action 'none'">
+          content="default-src 'self'; script-src 'self' 'sha256-FrhsavQXLNuWO97Meubzdm8B8jHzbAUfKujySjc8iIQ='; style-src 'self'; font-src 'self'; img-src 'self' data:; connect-src 'self'; manifest-src 'self'; worker-src 'self'; base-uri 'self'; object-src 'none'; form-action 'none'">
 
     <!-- MFI / PWA -->
     <meta name="mobile-web-app-capable" content="yes">
@@ -57,10 +57,9 @@
     <script>
         (function () {
             try {
+                var valid = ['pastel', 'light', 'dark', 'mono'];
                 var t = localStorage.getItem('theme');
-                if (t !== 'light' && t !== 'dark') {
-                    t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
-                }
+                if (valid.indexOf(t) === -1) t = 'pastel';
                 document.documentElement.setAttribute('data-theme', t);
             } catch (e) {}
         })();
