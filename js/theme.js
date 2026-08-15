@@ -1,15 +1,16 @@
-// theme.js — パステル/ライト/ダークテーマの管理
+// theme.js — パステル/ライト/ダーク/モノクロテーマの管理
 //
 // data-theme 属性を <html> に設定。保存が無ければデフォルトのパステルを使用する。
 
 const STORAGE_KEY = 'theme';
-const THEMES = ['pastel', 'light', 'dark'];
+const THEMES = ['pastel', 'light', 'dark', 'mono'];
 const DEFAULT_THEME = 'pastel';
 
 const META_COLORS = {
-    pastel: '#f5f3fb',
+    pastel: '#eeecf4',
     light: '#ffffff',
     dark: '#0f172a',
+    mono: '#0e0e0e',
 };
 
 export class ThemeManager {

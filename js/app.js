@@ -88,11 +88,12 @@ function setupHeader() {
 
 function updateThemeIcon() {
     if (!themeBtn) return;
-    // toggle の巡回順: pastel → light → dark → pastel
+    // toggle の巡回順: pastel → light → dark → mono → pastel
     const map = {
-        pastel: { icon: 'fa-palette', next: 'ライトテーマに切り替え' },
-        light:  { icon: 'fa-sun',     next: 'ダークテーマに切り替え' },
-        dark:   { icon: 'fa-moon',    next: 'パステルテーマに切り替え' },
+        pastel: { icon: 'fa-palette',            next: 'ライトテーマに切り替え' },
+        light:  { icon: 'fa-sun',                next: 'ダークテーマに切り替え' },
+        dark:   { icon: 'fa-moon',               next: 'モノクロテーマに切り替え' },
+        mono:   { icon: 'fa-circle-half-stroke', next: 'パステルテーマに切り替え' },
     };
     const info = map[theme.getTheme()] || map.pastel;
     themeBtn.replaceChildren(icon(info.icon));

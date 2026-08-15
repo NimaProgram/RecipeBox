@@ -73,33 +73,64 @@
 }
 
 :root[data-theme="pastel"] {
-    /* ライトと同じ色相(インディゴ系)をベースに、彩度を落とした柔らかいトーン */
-    --bg: #f5f3fb;
-    --surface: #ffffff;
-    --surface-2: #efecf9;
-    --surface-hover: #e7e2f5;
-    --border: #e6e1f4;
-    --border-strong: #d5cded;
+    /* ライトと同じ色相(インディゴ系)をベースに、彩度・明度をやや抑えた落ち着いたパステル */
+    --bg: #eeecf4;
+    --surface: #f8f7fb;
+    --surface-2: #e8e5f0;
+    --surface-hover: #ded9e9;
+    --border: #ddd7ea;
+    --border-strong: #cabfdd;
 
-    --text: #38334c;
-    --text-muted: #726c8c;
-    --text-faint: #a49dbe;
+    --text: #332e45;
+    --text-muted: #675f7d;
+    --text-faint: #968ead;
     --on-primary: #ffffff;
 
-    --primary: #7566d9;
-    --primary-hover: #6455ca;
-    --primary-soft: rgba(117, 102, 217, 0.12);
-    --primary-ring: rgba(117, 102, 217, 0.35);
+    --primary: #6a5cc4;
+    --primary-hover: #5a4db0;
+    --primary-soft: rgba(106, 92, 196, 0.12);
+    --primary-ring: rgba(106, 92, 196, 0.35);
 
-    --success: #4fae82;
-    --success-soft: rgba(79, 174, 130, 0.16);
-    --danger: #e07a7a;
-    --danger-soft: rgba(224, 122, 122, 0.14);
-    --warning: #d99a55;
+    --success: #4d9d76;
+    --success-soft: rgba(77, 157, 118, 0.16);
+    --danger: #cf7373;
+    --danger-soft: rgba(207, 115, 115, 0.14);
+    --warning: #c68f52;
 
-    --shadow-sm: 0 1px 2px rgba(90, 78, 150, 0.08);
-    --shadow: 0 4px 16px rgba(90, 78, 150, 0.12);
-    --shadow-lg: 0 16px 48px rgba(90, 78, 150, 0.22);
+    --shadow-sm: 0 1px 2px rgba(70, 60, 120, 0.08);
+    --shadow: 0 4px 16px rgba(70, 60, 120, 0.12);
+    --shadow-lg: 0 16px 48px rgba(70, 60, 120, 0.22);
+}
+
+:root[data-theme="mono"] {
+    /* ダーク派生・彩度0のモノクローム。各トークンはダークの明度をグレーに置換。
+       ライトなグレーを primary に用いるため、primary 上の文字色(on-primary)は暗色にする。 */
+    --bg: #0e0e0e;
+    --surface: #191919;
+    --surface-2: #232323;
+    --surface-hover: #2b2b2b;
+    --border: #2e2e2e;
+    --border-strong: #3f3f3f;
+
+    --text: #efefef;
+    --text-muted: #a7a7a7;
+    --text-faint: #717171;
+    --on-primary: #141414;
+
+    --primary: #c9c9c9;
+    --primary-hover: #dedede;
+    --primary-soft: rgba(201, 201, 201, 0.12);
+    --primary-ring: rgba(201, 201, 201, 0.35);
+
+    --success: #cfcfcf;
+    --success-soft: rgba(207, 207, 207, 0.12);
+    --danger: #9a9a9a;
+    --danger-soft: rgba(154, 154, 154, 0.16);
+    --warning: #bcbcbc;
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
+    --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.6);
 }
 
 /* ---- Reset / Base ------------------------------------------------------ */
