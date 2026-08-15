@@ -73,29 +73,30 @@
 }
 
 :root[data-theme="pastel"] {
-    /* ライトと同じ色相(インディゴ系)をベースに、彩度・明度をやや抑えた落ち着いたパステル */
+    /* ライトと同じ色相(インディゴ系)をベース。彩度(HSL S)を 20〜30% 帯まで落とした低彩度パステル。
+       primary は白文字ボタン背景のため、S=25% を保ちつつ L だけ下げて可読性(白文字 ≧4.5:1)を確保。 */
     --bg: #eeecf4;
-    --surface: #f8f7fb;
+    --surface: #f9f8fb;
     --surface-2: #e8e5f0;
     --surface-hover: #ded9e9;
-    --border: #ddd7ea;
-    --border-strong: #cabfdd;
+    --border: #ded9e8;
+    --border-strong: #cbc2da;
 
     --text: #332e45;
     --text-muted: #675f7d;
     --text-faint: #968ead;
     --on-primary: #ffffff;
 
-    --primary: #6a5cc4;
-    --primary-hover: #5a4db0;
-    --primary-soft: rgba(106, 92, 196, 0.12);
-    --primary-ring: rgba(106, 92, 196, 0.35);
+    --primary: #7169a5;
+    --primary-hover: #625a96;
+    --primary-soft: rgba(113, 105, 165, 0.12);
+    --primary-ring: rgba(113, 105, 165, 0.35);
 
-    --success: #4d9d76;
-    --success-soft: rgba(77, 157, 118, 0.16);
-    --danger: #cf7373;
-    --danger-soft: rgba(207, 115, 115, 0.14);
-    --warning: #c68f52;
+    --success: #589276;
+    --success-soft: rgba(88, 146, 118, 0.16);
+    --danger: #b98a8a;
+    --danger-soft: rgba(185, 138, 138, 0.16);
+    --warning: #a98d6f;
 
     --shadow-sm: 0 1px 2px rgba(70, 60, 120, 0.08);
     --shadow: 0 4px 16px rgba(70, 60, 120, 0.12);
