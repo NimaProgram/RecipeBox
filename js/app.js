@@ -18,7 +18,7 @@ import { openPip } from './views/pip.js';
 import { renderWelcome } from './views/welcome.js';
 import { BossStore } from './modules/boss-store.js';
 import { mountBoss } from './modules/boss.js';
-import { maybeStartOnboarding, replayOnboarding } from './onboarding.js';
+import { maybeStartOnboarding, replayOnboarding, consumeOnboardingPrefill } from './onboarding.js';
 
 const store = new Store();
 const bossStore = new BossStore();
@@ -115,7 +115,7 @@ function render() {
 
     // レシピ計算モジュール
     if (store.isEmpty()) {
-        appRoot.appendChild(renderWelcome({ onCreate: () => openRecipeForm(store), onImport: doImport }));
+        appRoot.appendChild(renderWelcome({ onCreate: openCreateForm, onImport: doImport }));
     } else {
         appRoot.appendChild(renderWorkspace());
     }
@@ -143,7 +143,7 @@ function renderToolbar() {
             statChip('fa-cube', stats.basicItems, '基本材料'),
         ]),
         el('div', { class: 'toolbar-actions' }, [
-            toolBtn('fa-plus', 'レシピ追加', 'primary', () => openRecipeForm(store), 'toolbar-add'),
+            toolBtn('fa-plus', 'レシピ追加', 'primary', openCreateForm, 'toolbar-add'),
             toolBtn('fa-list', '一覧', 'ghost', () => openRecipeList(store, { onSelect: selectRecipe })),
             toolBtn('fa-tags', 'カテゴリ', 'ghost', () => openCategoryManager(store)),
             toolBtn('fa-download', 'エクスポート', 'ghost', doExport),
@@ -245,6 +245,11 @@ function renderCalculatorPanel() {
 }
 
 // --- アクション -----------------------------------------------------------
+/** レシピ追加フォームを開く。チュートリアル中はサンプルをプリフィルする。 */
+function openCreateForm() {
+    openRecipeForm(store, null, { prefill: consumeOnboardingPrefill() });
+}
+
 function selectRecipe(name) {
     ui.selected = name;
     render();

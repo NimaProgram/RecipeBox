@@ -87,9 +87,14 @@ function openIngredientCreator(store) {
  * レシピ追加/編集モーダルを開く。
  * @param {import('../store.js').Store} store
  * @param {string|null} editName 編集対象名（新規は null）
+ * @param {{prefill?:{name?:string, baseQuantity?:number, icon?:string,
+ *          ingredients?:{name:string, qty:number, icon?:string}[]}}} [options]
+ *          prefill: 新規フォームに初期値を投入（チュートリアルのサンプル等）。
+ *          材料は不足分を基本材料として作成してから行を追加する。
  */
-export function openRecipeForm(store, editName = null) {
+export function openRecipeForm(store, editName = null, { prefill } = {}) {
     const editing = editName ? store.getRecipe(editName) : null;
+    const usePrefill = !editing && prefill && typeof prefill === 'object';
     const rows = [];
 
     const nameInput = el('input', { type: 'text', class: 'form-input', required: true, dataset: { tour: 'rf-name' }, value: editing ? editing.name : '', placeholder: 'レシピ / 材料名' });
@@ -98,6 +103,17 @@ export function openRecipeForm(store, editName = null) {
     iconBox.element.dataset.tour = 'rf-icon';
     const descInput = el('textarea', { class: 'form-input form-textarea', rows: '2', placeholder: '任意のメモ' });
     if (editing) descInput.value = editing.description || '';
+
+    // プリフィル（サンプルレシピ）。材料の不足分は基本材料として先に作成し、
+    // コンボボックスの選択肢に出るようにしてから行を追加する。
+    if (usePrefill) {
+        if (prefill.name) nameInput.value = prefill.name;
+        if (prefill.baseQuantity) baseQtyInput.value = String(prefill.baseQuantity);
+        if (prefill.icon) iconBox.setValue(prefill.icon);
+        (prefill.ingredients || []).forEach(m => {
+            if (m && m.name && !store.hasRecipe(m.name)) store.upsertRecipe({ name: m.name, icon: m.icon });
+        });
+    }
 
     const ingredientsList = el('div', { class: 'ingredients-list' });
 
@@ -143,6 +159,8 @@ export function openRecipeForm(store, editName = null) {
     // 初期材料行
     if (editing && editing.ingredients && Object.keys(editing.ingredients).length) {
         for (const [ing, qty] of Object.entries(editing.ingredients)) addRow(ing, qty);
+    } else if (usePrefill && prefill.ingredients && prefill.ingredients.length) {
+        prefill.ingredients.forEach(m => addRow(m.name, m.qty));
     } else {
         addRow();
     }
