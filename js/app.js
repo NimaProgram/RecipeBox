@@ -82,9 +82,15 @@ function setupHeader() {
 
 function updateThemeIcon() {
     if (!themeBtn) return;
-    const dark = theme.getTheme() === 'dark';
-    themeBtn.replaceChildren(icon(dark ? 'fa-moon' : 'fa-sun'));
-    themeBtn.title = dark ? 'ライトテーマに切り替え' : 'ダークテーマに切り替え';
+    // toggle の巡回順: pastel → light → dark → pastel
+    const map = {
+        pastel: { icon: 'fa-palette', next: 'ライトテーマに切り替え' },
+        light:  { icon: 'fa-sun',     next: 'ダークテーマに切り替え' },
+        dark:   { icon: 'fa-moon',    next: 'パステルテーマに切り替え' },
+    };
+    const info = map[theme.getTheme()] || map.pastel;
+    themeBtn.replaceChildren(icon(info.icon));
+    themeBtn.title = info.next;
 }
 
 // --- 描画 -----------------------------------------------------------------
