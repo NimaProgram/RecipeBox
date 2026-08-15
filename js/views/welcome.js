@@ -29,7 +29,7 @@ export function renderWelcome({ onCreate, onImport }) {
                 ]),
             ]))),
         el('div', { class: 'welcome-actions' }, [
-            el('button', { type: 'button', class: 'btn btn-primary btn-lg', onclick: onCreate }, [icon('fa-plus'), ' 最初のレシピを作成']),
+            el('button', { type: 'button', class: 'btn btn-primary btn-lg', dataset: { tour: 'welcome-create' }, onclick: onCreate }, [icon('fa-plus'), ' 最初のレシピを作成']),
             el('button', { type: 'button', class: 'btn btn-ghost btn-lg', onclick: onImport }, [icon('fa-upload'), ' データを読み込む']),
         ]),
     ]);

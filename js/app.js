@@ -18,6 +18,7 @@ import { openPip } from './views/pip.js';
 import { renderWelcome } from './views/welcome.js';
 import { BossStore } from './modules/boss-store.js';
 import { mountBoss } from './modules/boss.js';
+import { maybeStartOnboarding, replayOnboarding } from './onboarding.js';
 
 const store = new Store();
 const bossStore = new BossStore();
@@ -46,6 +47,7 @@ function boot() {
     store.subscribe(() => { if (ui.module === 'recipe') render(); });
     render();
     registerServiceWorker();
+    maybeStartOnboarding({ store });   // 初回訪問者にチュートリアル
 }
 
 function setupNav() {
@@ -77,6 +79,10 @@ function setupHeader() {
     if (themeBtn) {
         updateThemeIcon();
         themeBtn.addEventListener('click', () => { theme.toggle(); updateThemeIcon(); });
+    }
+    const helpBtn = document.getElementById('helpBtn');
+    if (helpBtn) {
+        helpBtn.addEventListener('click', () => replayOnboarding({ toRecipe: () => switchModule('recipe') }));
     }
 }
 
@@ -136,7 +142,7 @@ function renderToolbar() {
             statChip('fa-cube', stats.basicItems, '基本材料'),
         ]),
         el('div', { class: 'toolbar-actions' }, [
-            toolBtn('fa-plus', 'レシピ追加', 'primary', () => openRecipeForm(store)),
+            toolBtn('fa-plus', 'レシピ追加', 'primary', () => openRecipeForm(store), 'toolbar-add'),
             toolBtn('fa-list', '一覧', 'ghost', () => openRecipeList(store, { onSelect: selectRecipe })),
             toolBtn('fa-tags', 'カテゴリ', 'ghost', () => openCategoryManager(store)),
             toolBtn('fa-download', 'エクスポート', 'ghost', doExport),
@@ -155,8 +161,10 @@ function statChip(ic, value, label) {
     ]);
 }
 
-function toolBtn(ic, label, variant, onClick) {
-    return el('button', { type: 'button', class: `btn btn-${variant} btn-sm`, onclick: onClick }, [icon(ic), ' ', label]);
+function toolBtn(ic, label, variant, onClick, dataTour) {
+    const props = { type: 'button', class: `btn btn-${variant} btn-sm`, onclick: onClick };
+    if (dataTour) props.dataset = { tour: dataTour };
+    return el('button', props, [icon(ic), ' ', label]);
 }
 
 /** パネル見出しの PiP 起動ボタン（構成 or 計算モードで開く） */
@@ -176,6 +184,7 @@ function renderRecipePanel(selectable) {
         searchable: true,
         onSelect: selectRecipe,
     });
+    selector.element.dataset.tour = 'calc-select';
 
     const treeHost = el('div', { class: 'tree-host' });
 
@@ -200,7 +209,7 @@ function renderRecipePanel(selectable) {
 }
 
 function renderCalculatorPanel() {
-    const qtyInput = el('input', { type: 'number', min: '1', class: 'form-input', value: String(ui.quantity), 'aria-label': '作りたい個数' });
+    const qtyInput = el('input', { type: 'number', min: '1', class: 'form-input', dataset: { tour: 'calc-qty' }, value: String(ui.quantity), 'aria-label': '作りたい個数' });
     const resultHost = el('div', { class: 'result-host' });
 
     const compute = () => {
@@ -226,7 +235,7 @@ function renderCalculatorPanel() {
                 el('label', { class: 'form-label' }, '作りたい個数'),
                 el('div', { class: 'calc-row' }, [
                     qtyInput,
-                    el('button', { type: 'button', class: 'btn btn-primary', onclick: compute }, [icon('fa-play'), ' 計算']),
+                    el('button', { type: 'button', class: 'btn btn-primary', dataset: { tour: 'calc-run' }, onclick: compute }, [icon('fa-play'), ' 計算']),
                 ]),
             ]),
             resultHost,

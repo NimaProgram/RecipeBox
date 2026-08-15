@@ -92,9 +92,10 @@ export function openRecipeForm(store, editName = null) {
     const editing = editName ? store.getRecipe(editName) : null;
     const rows = [];
 
-    const nameInput = el('input', { type: 'text', class: 'form-input', required: true, value: editing ? editing.name : '', placeholder: 'レシピ / 材料名' });
-    const baseQtyInput = el('input', { type: 'number', min: '1', class: 'form-input', value: editing ? String(editing.baseQuantity || 1) : '1' });
+    const nameInput = el('input', { type: 'text', class: 'form-input', required: true, dataset: { tour: 'rf-name' }, value: editing ? editing.name : '', placeholder: 'レシピ / 材料名' });
+    const baseQtyInput = el('input', { type: 'number', min: '1', class: 'form-input', dataset: { tour: 'rf-baseqty' }, value: editing ? String(editing.baseQuantity || 1) : '1' });
     const iconBox = createCategoryBox(store, editing ? editing.icon : DEFAULT_ICON);
+    iconBox.element.dataset.tour = 'rf-icon';
     const descInput = el('textarea', { class: 'form-input form-textarea', rows: '2', placeholder: '任意のメモ' });
     if (editing) descInput.value = editing.description || '';
 
@@ -160,7 +161,7 @@ export function openRecipeForm(store, editName = null) {
             el('label', { class: 'form-label' }, '材料'),
             el('p', { class: 'form-hint' }, '材料を追加しなければ「基本材料」として登録されます'),
             ingredientsList,
-            el('button', { type: 'button', class: 'btn btn-ghost btn-sm add-ingredient', onclick: () => addRow() }, [icon('fa-plus'), ' 材料を追加']),
+            el('button', { type: 'button', class: 'btn btn-ghost btn-sm add-ingredient', dataset: { tour: 'rf-ingredients' }, onclick: () => addRow() }, [icon('fa-plus'), ' 材料を追加']),
         ]),
     ]);
 
@@ -205,7 +206,7 @@ export function openRecipeForm(store, editName = null) {
         return true;
     }
 
-    openModal({
+    const modal = openModal({
         title: editing ? 'レシピを編集' : 'レシピを追加',
         body,
         actions: [
@@ -213,6 +214,9 @@ export function openRecipeForm(store, editName = null) {
             { label: '保存', variant: 'primary', onClick: () => save() === false },
         ],
     });
+    // チュートリアル用フック（保存ボタン）
+    const saveBtn = modal.root.querySelector('.modal-footer .btn-primary');
+    if (saveBtn) saveBtn.dataset.tour = 'rf-save';
 
     setTimeout(() => nameInput.focus(), 0);
 }
