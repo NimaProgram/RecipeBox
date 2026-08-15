@@ -72,6 +72,36 @@
     --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.6);
 }
 
+:root[data-theme="pastel"] {
+    /* ライトと同じ色相(インディゴ系)をベースに、彩度を落とした柔らかいトーン */
+    --bg: #f5f3fb;
+    --surface: #ffffff;
+    --surface-2: #efecf9;
+    --surface-hover: #e7e2f5;
+    --border: #e6e1f4;
+    --border-strong: #d5cded;
+
+    --text: #38334c;
+    --text-muted: #726c8c;
+    --text-faint: #a49dbe;
+    --on-primary: #ffffff;
+
+    --primary: #7566d9;
+    --primary-hover: #6455ca;
+    --primary-soft: rgba(117, 102, 217, 0.12);
+    --primary-ring: rgba(117, 102, 217, 0.35);
+
+    --success: #4fae82;
+    --success-soft: rgba(79, 174, 130, 0.16);
+    --danger: #e07a7a;
+    --danger-soft: rgba(224, 122, 122, 0.14);
+    --warning: #d99a55;
+
+    --shadow-sm: 0 1px 2px rgba(90, 78, 150, 0.08);
+    --shadow: 0 4px 16px rgba(90, 78, 150, 0.12);
+    --shadow-lg: 0 16px 48px rgba(90, 78, 150, 0.22);
+}
+
 /* ---- Reset / Base ------------------------------------------------------ */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
