@@ -348,7 +348,7 @@ input, textarea, select { font: inherit; color: inherit; }
 .combobox-popover {
     /* 位置(left/top/width/max-height)は JS が fixed で設定し、
        祖先の overflow によるクリップを回避する */
-    position: fixed; z-index: 1200;
+    position: fixed; z-index: 2700; /* ガイドツアーのスポットライト(2500)より上に */
     background: var(--surface); border: 1px solid var(--border);
     border-radius: var(--r); box-shadow: var(--shadow-lg);
     padding: 6px; display: none; max-height: 320px; overflow: hidden;
