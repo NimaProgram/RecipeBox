@@ -741,7 +741,8 @@ body.pip .boss-remaining { font-size: .95rem; }
 .tour-spotlight {
     position: fixed; z-index: 2500; pointer-events: none; border-radius: 10px;
     box-shadow: 0 0 0 9999px rgba(12, 12, 18, 0.62);
-    transition: top .2s ease, left .2s ease, width .2s ease, height .2s ease;
+    /* 位置は JS が対象へ即座に合わせる（transition を付けるとモーダル出現直後に
+       追従がズレるため付けない）。 */
 }
 .tour-tip {
     position: fixed; z-index: 2600; width: min(340px, calc(100vw - 24px));

@@ -82,7 +82,7 @@ function setupHeader() {
     }
     const helpBtn = document.getElementById('helpBtn');
     if (helpBtn) {
-        helpBtn.addEventListener('click', () => replayOnboarding({ toRecipe: () => switchModule('recipe') }));
+        helpBtn.addEventListener('click', () => replayOnboarding({ store, toRecipe: () => switchModule('recipe') }));
     }
 }
 
