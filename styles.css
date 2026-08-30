@@ -664,12 +664,18 @@ body.pip .boss-remaining-label { display: none; }
 body.pip .boss-remaining { font-size: .95rem; }
 
 /* ミニ PiP（次のボスのみ・約 300x50） */
-.pip-mini { display: flex; align-items: center; gap: 8px; height: 100%; padding: 6px 10px; overflow: hidden; }
+.pip-mini { display: flex; flex-direction: column; justify-content: center; gap: 4px; height: 100%; padding: 6px 10px; overflow: hidden; }
+.pip-mini-main { display: flex; align-items: center; gap: 8px; }
 .pip-mini-icon {
     display: grid; place-items: center; width: 30px; height: 30px; flex: none;
     background: var(--primary-soft); color: var(--primary); border-radius: 8px; font-size: .85rem;
 }
 .pip-mini.imminent .pip-mini-icon { background: var(--danger-soft); color: var(--danger); }
+/* 5分以内に続く出現の併記（小さく・折返し可） */
+.pip-mini-subs { display: none; flex-wrap: wrap; gap: 2px 8px; padding-left: 38px; line-height: 1.2; }
+.pip-mini.has-subs .pip-mini-subs { display: flex; }
+.pip-mini-sub { font-size: .72rem; color: var(--text-muted); white-space: nowrap; }
+.pip-mini-sub-offset { color: var(--danger); font-weight: 700; font-variant-numeric: tabular-nums; }
 .pip-mini-name { flex: 1; min-width: 0; font-weight: 600; font-size: .85rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .pip-mini-remaining { flex: none; font-variant-numeric: tabular-nums; font-weight: 700; font-size: 1.05rem; }
 .pip-mini.imminent .pip-mini-remaining { color: var(--danger); }
