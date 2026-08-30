@@ -91,7 +91,9 @@ export function openModal({ title, body, actions = [], size = '', onClose } = {}
             type: 'button',
             class: `btn btn-${a.variant || 'ghost'}`,
             onclick: () => {
-                const keepOpen = a.onClick && a.onClick() === false;
+                // onClick が truthy を返したらモーダルを開いたままにする（例: 検証失敗時）。
+                // 返り値なし/falsy なら閉じる。
+                const keepOpen = !!(a.onClick && a.onClick());
                 if (a.closeOnClick !== false && !keepOpen) close(a.value);
             },
         }, a.label);

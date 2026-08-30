@@ -157,13 +157,42 @@ export function createNextBossView(bossStore) {
         type: 'button', class: 'pip-mini-skip', title: '次のボスへ', 'aria-label': '次のボスへスキップ',
         onclick: skip,
     }, [icon('fa-forward-step')]);
-    const root = el('div', { class: 'pip-mini' }, [iconEl, nameEl, remEl, skipBtn]);
+    const mainRow = el('div', { class: 'pip-mini-main' }, [iconEl, nameEl, remEl, skipBtn]);
+    // メイン出現時刻から5分以内に続くエントリを小さく併記する領域
+    const subsEl = el('div', { class: 'pip-mini-subs' });
+    const root = el('div', { class: 'pip-mini' }, [mainRow, subsEl]);
 
     let spawnMs = null;
     let alerted = false;
     let pinnedKey = null; // スキップで固定した出現のキー（null=最短を表示）
 
     const keyOf = (u) => `${u.boss.id}|${u.entry.day}|${u.entry.time}|${u.spawn.getTime()}`;
+
+    /** メイン出現からの差分を "+M:SS" 形式に（5分以内なので分は1桁想定） */
+    function formatOffset(ms) {
+        const total = Math.floor(Math.max(0, ms) / 1000);
+        const m = Math.floor(total / 60);
+        const s = total % 60;
+        return `+${m}:${String(s).padStart(2, '0')}`;
+    }
+
+    /** メイン出現時刻から5分以内（過ぎたものは除く）の後続エントリを併記 */
+    function renderSubs(list, main) {
+        const mainMs = main.spawn.getTime();
+        const mainKey = keyOf(main);
+        const now = Date.now();
+        const subs = list.filter((x) => {
+            const s = x.spawn.getTime();
+            return keyOf(x) !== mainKey && s >= mainMs && s <= mainMs + IMMINENT_MS && s > now;
+        });
+        subsEl.replaceChildren(...subs.map((x) => el('span', { class: 'pip-mini-sub' }, [
+            x.boss.name,
+            '(',
+            el('span', { class: 'pip-mini-sub-offset' }, formatOffset(x.spawn.getTime() - mainMs)),
+            ')',
+        ])));
+        root.classList.toggle('has-subs', subs.length > 0);
+    }
 
     function upcoming() {
         return computeUpcoming(bossStore.getBosses(), new Date(), { horizonHours: 168 });
@@ -182,6 +211,8 @@ export function createNextBossView(bossStore) {
             spawnMs = null;
             skipBtn.disabled = true;
             pinnedKey = null;
+            subsEl.replaceChildren();
+            root.classList.remove('has-subs');
             return;
         }
 
@@ -194,6 +225,7 @@ export function createNextBossView(bossStore) {
         nameEl.title = `${u.boss.name}（${formatSpawnLabel(u.entry)}）`;
         spawnMs = u.spawn.getTime();
         skipBtn.disabled = list.length <= 1;
+        renderSubs(list, u);
         tick();
     }
 
@@ -227,7 +259,7 @@ export function createNextBossView(bossStore) {
 export function openNextBossPip(bossStore) {
     return openPipWindow({
         title: 'MMO Toolkit — 次のボス',
-        width: 300, height: 56,
+        width: 300, height: 96,
         mount: (win, container) => {
             const view = createNextBossView(bossStore);
             container.appendChild(view.element);

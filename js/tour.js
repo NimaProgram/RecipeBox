@@ -24,6 +24,9 @@ let reposition = null;
 let spotlight = null;
 let tip = null;
 let currentTarget = null;
+let currentStep = null;
+let observer = null;
+let rafPending = false;
 
 const PAD = 6;      // スポットライトの余白
 const POLL_MS = 100;
@@ -45,12 +48,35 @@ export function startTour(stepList, options = {}) {
     document.body.appendChild(spotlight);
     document.body.appendChild(tip);
 
-    reposition = () => positionFor(currentTarget);
+    reposition = () => {
+        // 対象を選択セレクタから再解決し、再描画で要素が差し替わっても追従する。
+        if (currentStep && currentStep.target != null) {
+            const live = resolveSync(currentStep.target);
+            if (live) currentTarget = live; // 見つからないときは前回の位置を保持
+        }
+        positionFor(currentTarget);
+    };
     window.addEventListener('scroll', reposition, true);
     window.addEventListener('resize', reposition);
     document.addEventListener('keydown', onKey, true);
 
+    // DOM 変化（再描画やリスト選択後の作り直し）に追従して再配置
+    observer = new MutationObserver(() => {
+        if (!active) return;
+        if (rafPending) return;
+        rafPending = true;
+        requestAnimationFrame(() => { rafPending = false; if (active) reposition(); });
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+
     showStep();
+}
+
+/** target(セレクタ/関数/null)を同期的に解決 */
+function resolveSync(target) {
+    if (target == null) return null;
+    if (typeof target === 'function') { try { return target(); } catch { return null; } }
+    return document.querySelector(target);
 }
 
 /** ツアー終了 */
@@ -61,9 +87,10 @@ export function endTour(silent = false) {
     window.removeEventListener('scroll', reposition, true);
     window.removeEventListener('resize', reposition);
     document.removeEventListener('keydown', onKey, true);
+    if (observer) { observer.disconnect(); observer = null; }
     spotlight && spotlight.remove();
     tip && tip.remove();
-    spotlight = tip = currentTarget = null;
+    spotlight = tip = currentTarget = currentStep = null;
     if (!silent && opts.onFinish) opts.onFinish();
 }
 
@@ -104,6 +131,7 @@ function resolveTarget(step) {
 
 async function showStep() {
     const step = steps[index];
+    currentStep = step;
     const target = await resolveTarget(step);
     if (!active) return; // 途中で終了した場合
     currentTarget = target;
